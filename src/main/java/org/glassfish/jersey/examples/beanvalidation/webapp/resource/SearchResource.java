@@ -50,7 +50,7 @@ import javax.ws.rs.core.MediaType;
 
 import javax.validation.constraints.NotNull;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo2;
+import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 import org.glassfish.jersey.examples.beanvalidation.webapp.service.StorageService;
 import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.NotEmptySearchField;
 import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.SearchType;
@@ -74,7 +74,7 @@ public class SearchResource {
     @GET
     @NotNull
     @NotEmptySearchField
-    public List<Todo2> searchForTodo(
+    public List<Todo> searchForTodo(
             @NotBlank(message = "{search.string.empty}") @QueryParam("q") final String searchValue) {
 
         if ("title".equals(searchType)) {

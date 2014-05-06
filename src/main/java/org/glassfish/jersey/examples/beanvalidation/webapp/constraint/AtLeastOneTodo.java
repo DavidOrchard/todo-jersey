@@ -38,43 +38,43 @@
  * holder.
  */
 
-package src.main.java.org.glassfish.jersey.examples.beanvalidation.webapp.constraint;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-import javax.validation.Constraint;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.Payload;
-
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo2;
-
-/**
- * Checks {@link org.Todo2.jersey.examples.beanvalidation.webapp.domain.Todo} entity whether it has at least one
- * todo (title/body) pre-filled.
- *
- * @author David Orchard (orchard at pacificspirit.com)
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = AtLeastOneTodo.Validator.class)
-public @interface AtLeastOneTodo {
-
-    String message() default "{org.glassfish.jersey.examples.beanvalidation.webapp.constraint.AtLeastOneTodo.message}";
-
-    Class<?>[] groups() default {};
-
-    Class<? extends Payload>[] payload() default {};
-
-    public class Validator implements ConstraintValidator<AtLeastOneTodo, Todo2> {
-
-        @Override
-        public void initialize(final AtLeastOneTodo hasId) {
-        }
-
-        @Override
-        public boolean isValid(final Todo2 todo, final ConstraintValidatorContext constraintValidatorContext) {
-            return todo.getBody() != null || todo.getTitle() != null;
-        }
-    }
-}
+//package src.main.java.org.glassfish.jersey.examples.beanvalidation.webapp.constraint;
+//
+//import java.lang.annotation.Retention;
+//import java.lang.annotation.RetentionPolicy;
+//
+//import javax.validation.Constraint;
+//import javax.validation.ConstraintValidator;
+//import javax.validation.ConstraintValidatorContext;
+//import javax.validation.Payload;
+//
+//import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
+//
+///**
+// * Checks {@link org.Todo.jersey.examples.beanvalidation.webapp.domain.Todo} entity whether it has at least one
+// * todo (title/body) pre-filled.
+// *
+// * @author David Orchard (orchard at pacificspirit.com)
+// */
+//@Retention(RetentionPolicy.RUNTIME)
+//@Constraint(validatedBy = AtLeastOneTodo.Validator.class)
+//public @interface AtLeastOneTodo {
+//
+//    String message() default "{org.glassfish.jersey.examples.beanvalidation.webapp.constraint.AtLeastOneTodo.message}";
+//
+//    Class<?>[] groups() default {};
+//
+//    Class<? extends Payload>[] payload() default {};
+//
+//    public class Validator implements ConstraintValidator<AtLeastOneTodo, Todo> {
+//
+//        @Override
+//        public void initialize(final AtLeastOneTodo hasId) {
+//        }
+//
+//        @Override
+//        public boolean isValid(final Todo todo, final ConstraintValidatorContext constraintValidatorContext) {
+//            return todo.getBody() != null || todo.getTitle() != null;
+//        }
+//    }
+//}

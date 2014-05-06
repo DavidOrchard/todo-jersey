@@ -49,10 +49,10 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo2;
+import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 
 /**
- * Checks whether a given {@link org.Todo2.jersey.examples.beanvalidation.webapp.domain.Todo} entity has ID.
+ * Checks whether a given {@link org.Todo.jersey.examples.beanvalidation.webapp.domain.Todo} entity has ID.
  * Only return values are supposed to be annotated with this annotation.
  *
  * @author David Orchard (orchard at pacificspirit.com)
@@ -67,19 +67,19 @@ public @interface HasId {
 
     Class<? extends Payload>[] payload() default {};
 
-    public class Validator implements ConstraintValidator<HasId, Todo2>  {
+    public class Validator implements ConstraintValidator<HasId, Todo>  {
 
         @Override
         public void initialize(final HasId hasId) {
         }
 
         @Override
-        public boolean isValid(final Todo2 todo, final ConstraintValidatorContext constraintValidatorContext) {
+        public boolean isValid(final Todo todo, final ConstraintValidatorContext constraintValidatorContext) {
             return todo == null || todo.getId() != null;
         }
     }
 
-    public class ListValidator implements ConstraintValidator<HasId, List<Todo2>>  {
+    public class ListValidator implements ConstraintValidator<HasId, List<Todo>>  {
 
         private Validator validator = new Validator();
 
@@ -88,9 +88,9 @@ public @interface HasId {
         }
 
         @Override
-        public boolean isValid(final List<Todo2> todos, final ConstraintValidatorContext constraintValidatorContext) {
+        public boolean isValid(final List<Todo> todos, final ConstraintValidatorContext constraintValidatorContext) {
             boolean isValid = true;
-            for (final Todo2 todo : todos) {
+            for (final Todo todo : todos) {
                 isValid &= validator.isValid(todo, constraintValidatorContext);
             }
             return isValid;

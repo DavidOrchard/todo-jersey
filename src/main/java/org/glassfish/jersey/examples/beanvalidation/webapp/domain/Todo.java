@@ -51,7 +51,7 @@ import org.hibernate.validator.constraints.Length;
  * @author David Orchard (orchard at pacificspirit.com)
  */
 @XmlRootElement
-public class Todo2 {
+public class Todo {
 
     @DecimalMin(value = "1")
     private Long id;
@@ -104,11 +104,11 @@ public class Todo2 {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Todo2)) {
+        if (!(o instanceof Todo)) {
             return false;
         }
 
-        final Todo2 that = (Todo2) o;
+        final Todo that = (Todo) o;
 
         if (body != null ? !body.equals(that.body) : that.body != null) {
             return false;

@@ -54,7 +54,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo2;
+import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.validation.ValidationError;
@@ -72,15 +72,15 @@ import static org.junit.Assert.assertTrue;
  */
 public class TodoTest extends JerseyTest {
 
-    private final static Todo2 TODO_1;
-    private final static Todo2 TODO_2;
+    private final static Todo TODO_1;
+    private final static Todo TODO_2;
 
     static {
-        TODO_1 = new Todo2();
+        TODO_1 = new Todo();
         TODO_1.setTitle("Jersey Foo");
         TODO_1.setDone("1337");
 
-        TODO_2 = new Todo2();
+        TODO_2 = new Todo();
         TODO_2.setTitle("Jersey Bar");
         TODO_2.setBody("jersey@bar.com");
     }
@@ -117,7 +117,7 @@ public class TodoTest extends JerseyTest {
                 request(MediaType.APPLICATION_JSON_TYPE).
                 post(Entity.entity(TODO_1, MediaType.APPLICATION_JSON_TYPE));
 
-        final Todo2 todo = response.readEntity(Todo2.class);
+        final Todo todo = response.readEntity(Todo.class);
 
         assertEquals(200, response.getStatus());
         assertNotNull(todo.getId());
@@ -197,7 +197,7 @@ public class TodoTest extends JerseyTest {
 
     @Test
     public void testAddInvalidTodo() throws Exception {
-        final Todo2 entity = new Todo2();
+        final Todo entity = new Todo();
         entity.setDonee("Crrrn");
 
         final Response response = target().
@@ -245,7 +245,7 @@ public class TodoTest extends JerseyTest {
 
         assertEquals(200, response.getStatus());
 
-        final List<Todo2> result = response.readEntity(new GenericType<List<Todo2>>() {});
+        final List<Todo> result = response.readEntity(new GenericType<List<Todo>>() {});
         assertEquals(0, result.size());
     }
 
@@ -277,12 +277,12 @@ public class TodoTest extends JerseyTest {
                 request(MediaType.APPLICATION_JSON_TYPE).
                 get();
 
-        List<Todo2> todos = response.readEntity(new GenericType<List<Todo2>>() {});
+        List<Todo> todos = response.readEntity(new GenericType<List<Todo>>() {});
 
         assertEquals(200, response.getStatus());
         assertEquals(2, todos.size());
 
-        for (final Todo2 todo : todos) {
+        for (final Todo todo : todos) {
             assertTrue(todo.getTitle().contains("er"));
         }
 
@@ -292,7 +292,7 @@ public class TodoTest extends JerseyTest {
                 request(MediaType.APPLICATION_JSON_TYPE).
                 get();
 
-        todos = response.readEntity(new GenericType<List<Todo2>>() {});
+        todos = response.readEntity(new GenericType<List<Todo>>() {});
 
         assertEquals(200, response.getStatus());
         assertEquals(1, todos.size());

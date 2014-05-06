@@ -52,7 +52,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo2;
+import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 
 /**
  * Checks whether a return entity (entities) has a not-empty {@code searchType} field which contains {@code q} search phrase.
@@ -70,7 +70,7 @@ public @interface NotEmptySearchField {
 
     Class<? extends Payload>[] payload() default {};
 
-    public class Validator implements ConstraintValidator<NotEmptySearchField, Todo2> {
+    public class Validator implements ConstraintValidator<NotEmptySearchField, Todo> {
 
         private UriInfo uriInfo;
 
@@ -83,7 +83,7 @@ public @interface NotEmptySearchField {
         }
 
         @Override
-        public boolean isValid(final Todo2 todo, final ConstraintValidatorContext constraintValidatorContext) {
+        public boolean isValid(final Todo todo, final ConstraintValidatorContext constraintValidatorContext) {
             final String searchType = uriInfo.getPathParameters().getFirst("searchType");
             final String searchValue = uriInfo.getQueryParameters().getFirst("q");
 
@@ -97,7 +97,7 @@ public @interface NotEmptySearchField {
         }
     }
 
-    public class ListValidator implements ConstraintValidator<NotEmptySearchField, List<Todo2>> {
+    public class ListValidator implements ConstraintValidator<NotEmptySearchField, List<Todo>> {
 
         @Context
         private UriInfo uriInfo;
@@ -110,9 +110,9 @@ public @interface NotEmptySearchField {
         }
 
         @Override
-        public boolean isValid(final List<Todo2> todos, final ConstraintValidatorContext constraintValidatorContext) {
+        public boolean isValid(final List<Todo> todos, final ConstraintValidatorContext constraintValidatorContext) {
             boolean isValid = true;
-            for (final Todo2 todo : todos) {
+            for (final Todo todo : todos) {
                 isValid &= validator.isValid(todo, constraintValidatorContext);
             }
             return isValid;

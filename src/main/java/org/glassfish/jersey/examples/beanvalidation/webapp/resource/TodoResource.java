@@ -56,8 +56,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.AtLeastOneTodo;
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo2;
+//import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.AtLeastOneTodo;
+import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 import org.glassfish.jersey.examples.beanvalidation.webapp.service.StorageService;
 import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.HasId;
 
@@ -80,15 +80,16 @@ public class TodoResource {
     @Consumes("application/json")
     @NotNull(message = "{todo.already.exist}")
     @HasId
-    public Todo2 addTodo(
-            @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
-            final Todo2 todo) {
+    public Todo addTodo(
+//            @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
+            @NotNull(message = "{todo.empty.means}") @Valid
+           final Todo todo) {
         return StorageService.addTodo(todo);
     }
 
     @GET
     @NotNull @HasId
-    public List<Todo2> getTodos() {
+    public List<Todo> getTodos() {
         return StorageService.findByBody("");
     }
 
@@ -96,7 +97,7 @@ public class TodoResource {
     @Path("{id}")
     @NotNull(message = "{todo.does.not.exist}")
     @HasId
-    public Todo2 getTodo(
+    public Todo getTodo(
             @DecimalMin(value = "0", message = "{todo.wrong.id}")
             @PathParam("id") final Long id) {
         return StorageService.get(id);
@@ -104,7 +105,7 @@ public class TodoResource {
 
     @DELETE
     @NotNull @HasId
-    public List<Todo2> deleteTodos() {
+    public List<Todo> deleteTodos() {
         return StorageService.clear();
     }
 
@@ -112,7 +113,7 @@ public class TodoResource {
     @Path("{id}")
     @NotNull(message = "{todo.does.not.exist}")
     @HasId
-    public Todo2 deleteTodo(
+    public Todo deleteTodo(
             @DecimalMin(value = "0", message = "{todo.wrong.id}")
             @PathParam("id") final Long id) {
         return StorageService.remove(id);

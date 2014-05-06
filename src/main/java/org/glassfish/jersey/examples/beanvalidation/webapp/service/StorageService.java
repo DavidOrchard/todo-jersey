@@ -59,7 +59,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo2;
+import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 
 /**
  * Simple storage of todos.
@@ -69,7 +69,7 @@ import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo2;
 public class StorageService {
 
     private static final AtomicLong todoCounter = new AtomicLong(0);
-    private static final Map<Long, Todo2> todos = new HashMap<Long, Todo2>();
+    private static final Map<Long, Todo> todos = new HashMap<Long, Todo>();
     private static MongoClient mongoClient = null;
 	private static DB db = null;
 	
@@ -95,7 +95,7 @@ public class StorageService {
      * @param todo todo to be added.
      * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
      */
-    public static Todo2 addTodo(final Todo2 todo) {
+    public static Todo addTodo(final Todo todo) {
     	DBCollection table = db.getCollection("todos");
     	 
 //        if (todos.containsValue(todo)) {
@@ -113,10 +113,10 @@ public class StorageService {
      *
      * @return list of all removed todos.
      */
-    public static List<Todo2> clear() {
-        final Collection<Todo2> values = todos.values();
+    public static List<Todo> clear() {
+        final Collection<Todo> values = todos.values();
         todos.clear();
-        return new ArrayList<Todo2>(values);
+        return new ArrayList<Todo>(values);
     }
 
     /**
@@ -125,7 +125,7 @@ public class StorageService {
      * @param id id of the todo to be removed.
      * @return removed todo or {@code null} if the todo is not present in the storage.
      */
-    public static Todo2 remove(final Long id) {
+    public static Todo remove(final Long id) {
         return todos.remove(id);
     }
 
@@ -135,7 +135,7 @@ public class StorageService {
      * @param id id of the todo to be retrieved.
      * @return todo or {@code null} if the todo is not present in the storage.
      */
-    public static Todo2 get(final Long id) {
+    public static Todo get(final Long id) {
         return todos.get(id);
     }
 
@@ -145,10 +145,10 @@ public class StorageService {
      * @param titlePart search phrase.
      * @return list of matched todos or an empty list.
      */
-    public static List<Todo2> findByTitle(final String titlePart) {
-        final List<Todo2> results = new ArrayList<Todo2>();
+    public static List<Todo> findByTitle(final String titlePart) {
+        final List<Todo> results = new ArrayList<Todo>();
 
-        for (final Todo2 todo : todos.values()) {
+        for (final Todo todo : todos.values()) {
             final String title = todo.getTitle();
             if (title != null && title.contains(titlePart)) {
                 results.add(todo);
@@ -164,10 +164,10 @@ public class StorageService {
      * @param bodyPart search phrase.
      * @return list of matched todos or an empty list.
      */
-    public static List<Todo2> findByBody(final String bodyPart) {
-        final List<Todo2> results = new ArrayList<Todo2>();
+    public static List<Todo> findByBody(final String bodyPart) {
+        final List<Todo> results = new ArrayList<Todo>();
 
-        for (final Todo2 todo : todos.values()) {
+        for (final Todo todo : todos.values()) {
         	if (todo.getBody().contains(bodyPart)) {
                 results.add(todo);
             }
@@ -182,10 +182,10 @@ public class StorageService {
      * @param donePart search phrase.
      * @return list of matched todos or an empty list.
      */
-    public static List<Todo2> findByDone(final String donePart) {
-        final List<Todo2> results = new ArrayList<Todo2>();
+    public static List<Todo> findByDone(final String donePart) {
+        final List<Todo> results = new ArrayList<Todo>();
 
-        for (final Todo2 todo : todos.values()) {
+        for (final Todo todo : todos.values()) {
             final String phone = todo.getDone();
             if (phone != null && phone.contains(donePart)) {
                 results.add(todo);
