@@ -38,7 +38,7 @@
  * holder.
  */
 
-package src.main.java.org.glassfish.jersey.examples.beanvalidation.webapp.domain;
+package org.glassfish.jersey.examples.beanvalidation.webapp.domain;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
@@ -95,7 +95,7 @@ public class Todo {
         return done;
     }
 
-    public void setDonee(final String done) {
+    public void setDone(final String done) {
         this.done = done;
     }
 

@@ -69,7 +69,7 @@
     <tr>
         <td>/api/todo/{id}</td>
         <td>TodoResource</td>
-        <td>GET, DELETE</td>
+        <td>GET, DELETE, PUT</td>
         <td>id - positive number</td>
     </tr>
     <tr>
@@ -100,10 +100,14 @@ mvn clean package jetty:run</pre></blockquote>
 <p>This deploys current example using Jetty. You can access the application at <a href="http://localhost:8080/todo">http://localhost:8080/todo</a>
 </p>
 <p>You can access resources of this application also using curl:</p>
-<blockquote><code>curl -v -H "Accept: application/json" http://localhost:8080/todo/api/todo/424242</code></blockquote>
-<blockquote>In this example you should see JSON array returned with one error - "todo with given ID does not exist.".</blockquote>
-<blockquote><code>curl -v http://localhost:8080/todo/api/todo/424242</code></blockquote>
-<blockquote>In this example you should see the same error but as a plain text.</blockquote>
+<blockquote><code>curl -X POST --data '{"title":"hi","body":"text body", "done":false}'  -H "Accept: application/json" -H "Content-type: application/json" http://localhost:8080/bean-validation-webapp/api/todo
+
+curl -X PUT --data '{"title":"hi2","id":1, "body":"text body", "done":false}'  -H "Accept: application/json" -H "Content-type: application/json" http://localhost:8080/bean-validation-webapp/api/todo/1
+
+curl -H "Accept: application/json" http://localhost:8080/bean-validation-webapp/api/todo
+
+curl -X DELETE http://localhost:8080/bean-validation-webapp/api/todo/1
+</code></blockquote>
 
 <h2>Resources</h2>
 <p>This examples is using following (3-rd party) front-end frameworks:</p>

@@ -96,7 +96,7 @@ public class StorageService {
      * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
      */
     public static Todo addTodo(final Todo todo) {
-    	DBCollection table = db.getCollection("todos");
+//    	DBCollection table = db.getCollection("todos");
     	 
 //        if (todos.containsValue(todo)) {
 //            return null;
@@ -107,6 +107,22 @@ public class StorageService {
 //        table.insert(query);
         return todo;
     }
+    
+    /**
+     * Uupdates a todo into the storage.
+     *
+     * @param todo todo to be updated, must contain an id field
+     * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
+     */
+    public static Todo updateTodo(final Todo todo) {
+//    	DBCollection table = db.getCollection("todos");
+    	 
+        todos.put(todo.getId(), todo);
+//        BasicDBObject query = new BasicDBObject(String.valueOf(todo.getId()), contact);
+//        table.insert(query);
+        return todo;
+    }
+
 
     /**
      * Removes all todos from the storage.

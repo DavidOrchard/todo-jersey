@@ -38,7 +38,7 @@
  * holder.
  */
 
-package src.test.java.org.glassfish.jersey.examples.beanvalidation.webapp;
+package org.glassfish.jersey.examples.beanvalidation.webapp;
 
 import java.net.URI;
 import java.util.HashSet;
@@ -198,7 +198,7 @@ public class TodoTest extends JerseyTest {
     @Test
     public void testAddInvalidTodo() throws Exception {
         final Todo entity = new Todo();
-        entity.setDonee("Crrrn");
+        entity.setDone("Crrrn");
 
         final Response response = target().
                 path("todo").

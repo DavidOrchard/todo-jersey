@@ -38,7 +38,7 @@
  * holder.
  */
 
-package src.main.java.org.glassfish.jersey.examples.beanvalidation.webapp.resource;
+package org.glassfish.jersey.examples.beanvalidation.webapp.resource;
 
 import java.util.List;
 
@@ -46,6 +46,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -56,7 +57,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
-//import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.AtLeastOneTodo;
+import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.AtLeastOneTodo;
 import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 import org.glassfish.jersey.examples.beanvalidation.webapp.service.StorageService;
 import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.HasId;
@@ -81,8 +82,7 @@ public class TodoResource {
     @NotNull(message = "{todo.already.exist}")
     @HasId
     public Todo addTodo(
-//            @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
-            @NotNull(message = "{todo.empty.means}") @Valid
+            @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
            final Todo todo) {
         return StorageService.addTodo(todo);
     }
@@ -103,6 +103,17 @@ public class TodoResource {
         return StorageService.get(id);
     }
 
+    @PUT
+    @Path("{id}")
+    @Consumes("application/json")
+     public Todo updateTodo(
+            @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
+//    		@DecimalMin(value = "0", message = "{todo.wrong.id}")
+//            @PathParam("id") final Long id,
+           final Todo todo) {
+        return StorageService.updateTodo(todo);
+    }
+    
     @DELETE
     @NotNull @HasId
     public List<Todo> deleteTodos() {

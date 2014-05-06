@@ -52,7 +52,7 @@ import javax.validation.constraints.NotNull;
 
 import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 import org.glassfish.jersey.examples.beanvalidation.webapp.service.StorageService;
-import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.NotEmptySearchField;
+//import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.NotEmptySearchField;
 import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.SearchType;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -73,7 +73,7 @@ public class SearchResource {
 
     @GET
     @NotNull
-    @NotEmptySearchField
+//    @NotEmptySearchField
     public List<Todo> searchForTodo(
             @NotBlank(message = "{search.string.empty}") @QueryParam("q") final String searchValue) {
 
