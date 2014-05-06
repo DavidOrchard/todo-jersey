@@ -89,7 +89,7 @@ public class TodoResource {
     }
 
     @GET
-    @NotNull @HasId
+    @NotNull
     public List<Todo> getTodos() {
         return StorageService.findByBody("");
     }
