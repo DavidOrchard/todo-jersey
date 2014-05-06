@@ -109,12 +109,12 @@ public class StorageService {
     }
     
     /**
-     * Uupdates a todo into the storage.
+     * Updates a todo into the storage.
      *
      * @param todo todo to be updated, must contain an id field
      * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
      */
-    public static Todo updateTodo(final Todo todo) {
+    public static Todo updateTodoFull(final Todo todo) {
 //    	DBCollection table = db.getCollection("todos");
     	 
         todos.put(todo.getId(), todo);
@@ -122,6 +122,37 @@ public class StorageService {
 //        table.insert(query);
         return todo;
     }
+    
+    /**
+     * Updates a todo into the storage.
+     *
+     * @param todo todo to be updated, must contain an id field
+     * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
+     */
+    public static Todo updateTodoPartial(final Todo todo) {
+//    	DBCollection table = db.getCollection("todos");
+    	Todo storedTodo = todos.get(todo.getId());
+    	if (storedTodo == null) {
+    		return updateTodoFull(todo);
+    	}
+    	String newTitle = todo.getTitle();
+    	if(newTitle != null) {
+    		storedTodo.setTitle(newTitle);
+    	}
+ 
+    	String newBody = todo.getBody();
+    	if(newBody != null) {
+    		storedTodo.setBody(newBody);
+    	}
+
+    	String newDone = todo.getDone();
+    	if(newDone!= null) {
+    		storedTodo.setBody(newDone);
+    	}
+    	
+        return updateTodoFull(storedTodo);
+    }
+
 
 
     /**
