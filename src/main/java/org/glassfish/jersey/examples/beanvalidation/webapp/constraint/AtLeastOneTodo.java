@@ -70,6 +70,7 @@ public @interface AtLeastOneTodo {
 
         @Override
         public void initialize(final AtLeastOneTodo hasId) {
+        	
         }
 
         @Override

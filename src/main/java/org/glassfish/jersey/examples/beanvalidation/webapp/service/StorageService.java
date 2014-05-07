@@ -135,6 +135,8 @@ public class StorageService {
     	if (storedTodo == null) {
     		return updateTodoFull(todo);
     	}
+    	
+    	
     	String newTitle = todo.getTitle();
     	if(newTitle != null) {
     		storedTodo.setTitle(newTitle);
