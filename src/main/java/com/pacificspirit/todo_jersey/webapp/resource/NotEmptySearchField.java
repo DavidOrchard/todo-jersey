@@ -38,44 +38,84 @@
  * holder.
  */
 
-package org.glassfish.jersey.examples.beanvalidation.webapp.constraint;
+package com.pacificspirit.todo_jersey.webapp.resource;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
+
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.domain.Todo;
 
 /**
- * Checks {@link org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo} entity whether it has at least one
- * todo (title/body) pre-filled.
+ * Checks whether a return entity (entities) has a not-empty {@code searchType} field which contains {@code q} search phrase.
+ * (Double check for entities returned from {@link com.pacificspirit.todo_jersey.webapp.service.StorageService}.)
  *
  * @author David Orchard (orchard at pacificspirit.com)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = AtLeastOneTodo.Validator.class)
-public @interface AtLeastOneTodo {
+@Constraint(validatedBy = {NotEmptySearchField.Validator.class, NotEmptySearchField.ListValidator.class})
+public @interface NotEmptySearchField {
 
-    String message() default "{org.glassfish.jersey.examples.beanvalidation.webapp.constraint.AtLeastOneTodo.message}";
+    String message() default "{com.pacificspirit.todo_jersey.webapp.constraint.NotEmptySearchField.message}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    public class Validator implements ConstraintValidator<AtLeastOneTodo, Todo> {
+    public class Validator implements ConstraintValidator<NotEmptySearchField, Todo> {
+
+        private UriInfo uriInfo;
+
+        public Validator(@Context final UriInfo uriInfo) {
+            this.uriInfo = uriInfo;
+        }
 
         @Override
-        public void initialize(final AtLeastOneTodo hasId) {
-        	
+        public void initialize(final NotEmptySearchField hasId) {
         }
 
         @Override
         public boolean isValid(final Todo todo, final ConstraintValidatorContext constraintValidatorContext) {
-            return todo.getBody() != null || todo.getTitle() != null;
+            final String searchType = uriInfo.getPathParameters().getFirst("searchType");
+            final String searchValue = uriInfo.getQueryParameters().getFirst("q");
+
+            if ("title".equals(searchType)) {
+                return todo.getTitle() != null && todo.getTitle().contains(searchValue);
+            } else if ("Done".equals(searchType)) {
+                return todo.getDone() != null && todo.getDone().contains(searchValue);
+            } else {
+                return todo.getBody().contains(searchValue);
+            }
+        }
+    }
+
+    public class ListValidator implements ConstraintValidator<NotEmptySearchField, List<Todo>> {
+
+        @Context
+        private UriInfo uriInfo;
+
+        private Validator validator;
+
+        @Override
+        public void initialize(final NotEmptySearchField hasId) {
+            validator = new Validator(uriInfo);
+        }
+
+        @Override
+        public boolean isValid(final List<Todo> todos, final ConstraintValidatorContext constraintValidatorContext) {
+            boolean isValid = true;
+            for (final Todo todo : todos) {
+                isValid &= validator.isValid(todo, constraintValidatorContext);
+            }
+            return isValid;
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.glassfish.jersey.examples.beanvalidation.webapp.resource;
+package com.pacificspirit.todo_jersey.webapp.resource;
 
 import javax.ws.rs.HttpMethod;
 import java.lang.annotation.Retention;

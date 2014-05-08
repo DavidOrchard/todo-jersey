@@ -38,7 +38,7 @@
  * holder.
  */
 
-package org.glassfish.jersey.examples.beanvalidation.webapp.constraint;
+package com.pacificspirit.todo_jersey.webapp.resource;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,7 +49,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.domain.Todo;
 
 /**
  * Checks whether a given {@link org.Todo.jersey.examples.beanvalidation.webapp.domain.Todo} entity has ID.
@@ -61,7 +61,7 @@ import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
 @Constraint(validatedBy = {HasId.Validator.class, HasId.ListValidator.class})
 public @interface HasId {
 
-    String message() default "{org.glassfish.jersey.examples.beanvalidation.webapp.constraint.HasId.message}";
+    String message() default "{com.pacificspirit.todo_jersey.webapp.constraint.HasId.message}";
 
     Class<?>[] groups() default {};
 

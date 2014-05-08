@@ -38,51 +38,32 @@
  * holder.
  */
 
-package org.glassfish.jersey.examples.beanvalidation.webapp.resource;
+package com.pacificspirit.todo_jersey.webapp.resource;
 
-import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
 import javax.validation.constraints.NotNull;
-
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
-import org.glassfish.jersey.examples.beanvalidation.webapp.service.StorageService;
-//import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.NotEmptySearchField;
-import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.SearchType;
-
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
- * Resource providing search capability over a stored todo.
- * <p/>
- * See validation of injected class field, input query param and return value.
+ * Checks whether the requested search type is allowed.
  *
  * @author David Orchard (orchard at pacificspirit.com)
  */
-@Produces(MediaType.APPLICATION_JSON)
-public class SearchResource {
+@Retention(RetentionPolicy.RUNTIME)
+@NotNull
+@Pattern(regexp = "(title|body|done)")
+@ReportAsSingleViolation
+@Constraint(validatedBy = {})
+public @interface SearchType {
 
-    @SearchType
-    @PathParam("searchType")
-    private String searchType;
+    String message() default "{com.pacificspirit.todo_jersey.webapp.constraint.SearchType.message}";
 
-    @GET
-    @NotNull
-//    @NotEmptySearchField
-    public List<Todo> searchForTodo(
-            @NotBlank(message = "{search.string.empty}") @QueryParam("q") final String searchValue) {
+    Class<?>[] groups() default {};
 
-        if ("title".equals(searchType)) {
-            return StorageService.findByTitle(searchValue);
-        } else if ("done".equals(searchType)) {
-            return StorageService.findByDone(searchValue);
-        } else {
-            return StorageService.findByBody(searchValue);
-        }
-    }
+    Class<? extends Payload>[] payload() default {};
 }

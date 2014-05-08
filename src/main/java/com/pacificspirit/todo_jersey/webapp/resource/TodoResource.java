@@ -38,7 +38,7 @@
  * holder.
  */
 
-package org.glassfish.jersey.examples.beanvalidation.webapp.resource;
+package com.pacificspirit.todo_jersey.webapp.resource;
 
 import java.util.List;
 
@@ -58,10 +58,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.AtLeastOneTodo;
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
-import org.glassfish.jersey.examples.beanvalidation.webapp.service.StorageService;
-import org.glassfish.jersey.examples.beanvalidation.webapp.constraint.HasId;
+import com.pacificspirit.todo_jersey.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.service.StorageService;
+import com.pacificspirit.todo_jersey.webapp.resource.HasId;
+import com.pacificspirit.todo_jersey.webapp.resource.AtLeastOneTodo;
 
 /**
  * Todo basic resource class. Provides support for inserting, retrieving and deleting Todos.

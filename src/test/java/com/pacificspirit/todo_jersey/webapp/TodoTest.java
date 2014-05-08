@@ -38,7 +38,7 @@
  * holder.
  */
 
-package org.glassfish.jersey.examples.beanvalidation.webapp;
+package com.pacificspirit.todo_jersey.webapp;
 
 import java.net.URI;
 import java.util.HashSet;
@@ -54,7 +54,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.domain.Todo;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.validation.ValidationError;
@@ -231,7 +231,7 @@ public class TodoTest extends JerseyTest {
 
         final Set<String> messageTemplates = getValidationMessageTemplates(response);
         assertEquals(1, messageTemplates.size());
-        assertTrue(messageTemplates.contains("{org.glassfish.jersey.examples.beanvalidation.webapp.constraint.SearchType.message}"));
+        assertTrue(messageTemplates.contains("{com.pacificspirit.todo_jersey.webapp.constraint.SearchType.message}"));
     }
 
     @Test

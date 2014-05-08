@@ -38,7 +38,7 @@
  * holder.
  */
 
-package org.glassfish.jersey.examples.beanvalidation.webapp.service;
+package com.pacificspirit.todo_jersey.webapp.service;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
@@ -59,7 +59,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.domain.Todo;
 
 /**
  * Simple storage of todos.

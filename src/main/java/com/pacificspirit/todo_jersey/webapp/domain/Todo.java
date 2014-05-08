@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2012 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012-2013 Oracle and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -38,32 +38,96 @@
  * holder.
  */
 
-package org.glassfish.jersey.examples.beanvalidation.webapp.constraint;
+package com.pacificspirit.todo_jersey.webapp.domain;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import javax.validation.ReportAsSingleViolation;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.validator.constraints.Length;
 
 /**
- * Checks whether the requested search type is allowed.
- *
  * @author David Orchard (orchard at pacificspirit.com)
  */
-@Retention(RetentionPolicy.RUNTIME)
-@NotNull
-@Pattern(regexp = "(title|body|done)")
-@ReportAsSingleViolation
-@Constraint(validatedBy = {})
-public @interface SearchType {
+@XmlRootElement
+public class Todo {
 
-    String message() default "{org.glassfish.jersey.examples.beanvalidation.webapp.constraint.SearchType.message}";
+    @DecimalMin(value = "1")
+    private Long id;
 
-    Class<?>[] groups() default {};
+    private String title;
 
-    Class<? extends Payload>[] payload() default {};
+    @NotNull(message = "{todo.wrong.title}")
+    @Length(min = 1, max = 100)
+     private String body;
+
+    private String done;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    @NotNull(message = "{todo.wrong.body}")
+    @Length(min = 2, max = 5000)
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(final String body) {
+        this.body = body;
+    }
+
+    @Pattern(message = "{todo.wrong.done}", regexp = "true|false")
+    public String getDone() {
+        return done;
+    }
+
+    public void setDone(final String done) {
+        this.done = done;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Todo)) {
+            return false;
+        }
+
+        final Todo that = (Todo) o;
+
+        if (body != null ? !body.equals(that.body) : that.body != null) {
+            return false;
+        }
+        if (title != null ? !title.equals(that.title) : that.title != null) {
+            return false;
+        }
+        if (done != null ? !done.equals(that.done) : that.done != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (body != null ? body.hashCode() : 0);
+        result = 31 * result + (done != null ? done.hashCode() : 0);
+        return result;
+    }
 }

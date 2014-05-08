@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.jersey.examples.beanvalidation.webapp;
+package com.pacificspirit.todo_jersey.webapp;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -50,8 +50,8 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.validation.ParameterNameProvider;
 import javax.validation.Validation;
 
-import org.glassfish.jersey.examples.beanvalidation.webapp.resource.TodoResource;
-import org.glassfish.jersey.examples.beanvalidation.webapp.service.StorageService;
+import com.pacificspirit.todo_jersey.webapp.resource.TodoResource;
+import com.pacificspirit.todo_jersey.webapp.service.StorageService;
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
