@@ -56,11 +56,12 @@ public class Todo {
     @DecimalMin(value = "1")
     private Long id;
 
-    private String title;
-
     @NotNull(message = "{todo.wrong.title}")
     @Length(min = 1, max = 100)
-     private String body;
+    private String title;
+
+    @Length(min = 0, max = 5000, message = "{todo.wrong.body}")
+    private String body;
 
     private String done;
 
@@ -72,8 +73,6 @@ public class Todo {
         this.id = id;
     }
 
-    @NotNull(message = "{todo.wrong.body}")
-    @Length(min = 2, max = 5000)
     public String getTitle() {
         return title;
     }
@@ -90,7 +89,7 @@ public class Todo {
         this.body = body;
     }
 
-    @Pattern(message = "{todo.wrong.done}", regexp = "true|false")
+    @Pattern(message = "{todo.wrong.done}", regexp = "(true|false)")
     public String getDone() {
         return done;
     }

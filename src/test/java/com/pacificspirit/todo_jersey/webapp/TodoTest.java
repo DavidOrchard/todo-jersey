@@ -78,11 +78,12 @@ public class TodoTest extends JerseyTest {
     static {
         TODO_1 = new Todo();
         TODO_1.setTitle("Jersey Foo");
-        TODO_1.setDone("1337");
+        TODO_1.setDone("true");
 
         TODO_2 = new Todo();
         TODO_2.setTitle("Jersey Bar");
         TODO_2.setBody("jersey@bar.com");
+        TODO_2.setDone("false");
     }
 
     @Override
@@ -197,7 +198,7 @@ public class TodoTest extends JerseyTest {
 
     @Test
     public void testAddInvalidTodo() throws Exception {
-        final Todo entity = new Todo();
+         final Todo entity = new Todo();
         entity.setDone("Crrrn");
 
         final Response response = target().
@@ -209,13 +210,14 @@ public class TodoTest extends JerseyTest {
 
         final List<ValidationError> validationErrorList = getValidationErrorList(response);
         for (final ValidationError validationError : validationErrorList) {
-            assertTrue(validationError.getPath().contains("TodoResource.addTodo.todo."));
+            assertTrue(validationError.getPath().contains("TodoResource.addTodo.todo"));
         }
 
         final Set<String> messageTemplates = getValidationMessageTemplates(validationErrorList);
-        assertEquals(2, messageTemplates.size());
         assertTrue(messageTemplates.contains("{todo.wrong.title}"));
-        assertTrue(messageTemplates.contains("{todo.wrong.body}"));
+        assertTrue(messageTemplates.contains("{todo.wrong.done}"));
+        assertTrue(messageTemplates.contains("{todo.empty.means}"));
+        assertEquals(3, messageTemplates.size());
     }
 
     @Test

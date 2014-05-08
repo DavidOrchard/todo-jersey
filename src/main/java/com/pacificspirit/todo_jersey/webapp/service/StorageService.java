@@ -98,9 +98,9 @@ public class StorageService {
     public static Todo addTodo(final Todo todo) {
 //    	DBCollection table = db.getCollection("todos");
     	 
-//        if (todos.containsValue(todo)) {
-//            return null;
-//        }
+        if (todos.containsValue(todo)) {
+            return null;
+        }
         todo.setId(todoCounter.incrementAndGet());
         todos.put(todo.getId(), todo);
 //        BasicDBObject query = new BasicDBObject(String.valueOf(todo.getId()), contact);
@@ -210,16 +210,17 @@ public class StorageService {
     /**
      * Finds todos whose name contains {@code namePart} as a substring.
      *
-     * @param bodyPart search phrase.
+     * @param bodyPart search phrase.  empty means match any including empty or non-existant body parts
      * @return list of matched todos or an empty list.
      */
     public static List<Todo> findByBody(final String bodyPart) {
         final List<Todo> results = new ArrayList<Todo>();
 
         for (final Todo todo : todos.values()) {
-        	if (todo.getBody().contains(bodyPart)) {
-                results.add(todo);
-            }
+        	final String body = todo.getBody();
+        	if ((bodyPart.length() == 0) || (body != null && body.contains(bodyPart))) {
+        		results.add(todo);
+             }
         }
 
         return results;
