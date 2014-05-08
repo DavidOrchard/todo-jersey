@@ -71,6 +71,11 @@
           <artifactId>mongo-java-driver</artifactId>
           <version>2.10.1</version>
       </dependency>
+  <dependency>
+    <groupId>com.github.fge</groupId>
+    <artifactId>json-patch</artifactId>
+    <version>1.7</version>
+</dependency>
     </dependencies>
 
     <build>

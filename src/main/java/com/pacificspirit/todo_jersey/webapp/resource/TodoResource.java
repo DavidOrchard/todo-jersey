@@ -146,4 +146,7 @@ public class TodoResource {
     public SearchResource search() {
         return resourceContext.getResource(SearchResource.class);
     }
+    
+    // TODO: support PATCH rfc with accept-patchheader per
+    // http://java.dzone.com/articles/transparent-patch-support-jax
 }

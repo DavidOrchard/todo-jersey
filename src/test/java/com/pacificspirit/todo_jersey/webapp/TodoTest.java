@@ -45,6 +45,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
@@ -54,18 +55,22 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.client.ClientConfig;
+
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
+
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.validation.ValidationError;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
-
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+//import com.sun.jersey.client.apache.ApacheHttpClient;
 
 /**
  * @author David Orchard (orchard at pacificspirit.com)
@@ -131,6 +136,79 @@ public class TodoTest extends JerseyTest {
 
         assertEquals(200, target.path("" + todo.getId()).request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
     }
+    
+    @Test
+    public void testUpdateTodo() throws Exception {
+        final WebTarget target = target().
+                path("todo");
+        Response response = target.
+                request(MediaType.APPLICATION_JSON_TYPE).
+                post(Entity.entity(TODO_1, MediaType.APPLICATION_JSON_TYPE));
+
+        final Todo todo = response.readEntity(Todo.class);
+
+        assertEquals(200, response.getStatus());
+        assertNotNull(todo.getId());
+        
+        todo.setBody("new body");
+
+        response = target.
+        		path("" + todo.getId()).
+        		request(MediaType.APPLICATION_JSON_TYPE).
+                put(Entity.entity(todo, MediaType.APPLICATION_JSON_TYPE));
+        final Todo todoNew = response.readEntity(Todo.class);
+        
+        assertEquals(200, response.getStatus());
+        assertTrue(todoNew.getBody().contains("new body"));
+
+        assertEquals(200, target.path("" + todo.getId()).request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
+    }
+    
+    @Test
+    public void testPartialUpdateTodo() throws Exception {
+        final WebTarget target = target().
+                path("todo");
+        Response response = target.
+                request(MediaType.APPLICATION_JSON_TYPE).
+                post(Entity.entity(TODO_1, MediaType.APPLICATION_JSON_TYPE));
+
+        final Todo todo = response.readEntity(Todo.class);
+
+        assertEquals(200, response.getStatus());
+        assertNotNull(todo.getId());
+        
+        todo.setBody("new body");
+
+//        response = target.
+//        		path("" + todo.getId()).
+//        		request(MediaType.APPLICATION_JSON_TYPE).
+//                method("PATCH", Entity.entity(todo, MediaType.APPLICATION_JSON_TYPE));
+//        final Todo todoNew = response.readEntity(Todo.class);
+        
+//        DefaultClientConfig config = new DefaultClientConfig();
+//        config.getProperties().put(URLConnectionClientHandler.PROPERTY_HTTP_URL_CONNECTION_SET_METHOD_WORKAROUND, true);
+//        Client c = Client.create(config);
+//
+//        WebResource r = c.resource(getUri().path("test/entity").build());
+        
+        
+//        com.sun.jersey.api.client.Client c = ApacheHttpClient.create();
+//        com.sun.jersey.api.client.WebResource r = c.resource("http://localhost:8080/bean-validation-webapp/api/todo/1");
+//     big long exception if above
+        
+        
+// https://github.com/fge/json-patch
+// http://kingsfleet.blogspot.ca/2014/02/transparent-patch-support-in-jax-rs-20.html
+// http://soabits.blogspot.ca/2013/01/http-put-patch-or-post-partial-updates.html
+// http://www.javacodegeeks.com/2012/09/simple-rest-client-in-java.html
+//        Todo todoNew = r.method("PATCH", Todo.class, todo);
+//        
+//        assertEquals(200, response.getStatus());
+//        assertTrue(todoNew.getBody().contains("new body"));
+//
+        assertEquals(200, target.path("" + todo.getId()).request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
+    }
+
 
     @Test
     public void testTodoDoesNotExist() throws Exception {
