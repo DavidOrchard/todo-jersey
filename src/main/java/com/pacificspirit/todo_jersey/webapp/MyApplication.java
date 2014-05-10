@@ -52,6 +52,8 @@ import javax.validation.Validation;
 
 import com.pacificspirit.todo_jersey.webapp.resource.TodoResource;
 import com.pacificspirit.todo_jersey.webapp.service.StorageService;
+import com.twilio.sdk.resource.factory.MessageFactory;
+
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -64,8 +66,12 @@ import org.glassfish.jersey.server.validation.internal.InjectingConstraintValida
  * @author David Orchard (orchard at pacificspirit.com)
  */
 public class MyApplication extends ResourceConfig {
+	
+	public MyApplication() {
+		this(null);
+	}
 
-    public MyApplication() {
+    public MyApplication(MessageFactory messageFactory) {
         // Resources.
         packages(TodoResource.class.getPackage().getName());
 
@@ -75,7 +81,8 @@ public class MyApplication extends ResourceConfig {
         // Providers - JSON.
         register(MoxyJsonFeature.class);
         register(JsonConfiguration.class);
-        StorageService.init();
+        
+        StorageService.init(messageFactory);
     }
 
     /**

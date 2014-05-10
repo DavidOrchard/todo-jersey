@@ -50,8 +50,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.ServerAddress;
 
-import java.util.Arrays;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,6 +58,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.resource.MessageResource;
+import com.twilio.sdk.resource.factory.MessageFactory;
 
 /**
  * Simple storage of todos.
@@ -72,12 +72,13 @@ public class StorageService {
     private static final Map<Long, Todo> todos = new HashMap<Long, Todo>();
     private static MongoClient mongoClient = null;
 	private static DB db = null;
+	private static MessageFactory messageFactory = null;
 	
     /**
      *  init
      *  
      */
-    public static void init() {
+    public static void init(MessageFactory mf) {
     	// To directly connect to a single MongoDB server (note that this will not auto-discover the primary even
     	// if it's a member of a replica set:
     	try {
@@ -86,6 +87,7 @@ public class StorageService {
     	} catch (Exception e) {
     		
     	}
+    	messageFactory = mf;
      	
     }
 
@@ -116,12 +118,31 @@ public class StorageService {
      */
     public static Todo updateTodoFull(final Todo todo) {
 //    	DBCollection table = db.getCollection("todos");
-    	 
+    	Todo oldTodo = todos.get(todo.getId());
+    	compareDone(oldTodo.getDone(), todo.getDone(), todo.getTitle());
+         
         todos.put(todo.getId(), todo);
 //        BasicDBObject query = new BasicDBObject(String.valueOf(todo.getId()), contact);
 //        table.insert(query);
         return todo;
     }
+    
+    /**
+     * Updates a todo's done into the storage.
+     *
+     * @param todo todo to be updated, must contain an id field
+     * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
+     */
+    public static Todo updateTodoDone(final Long id, final String done) {
+        Todo oldTodo = todos.get(id);
+        compareDone(oldTodo.getDone(), done, oldTodo.getTitle());
+        oldTodo.setDone(done);
+        todos.put(oldTodo.getId(), oldTodo);
+//        BasicDBObject query = new BasicDBObject(String.valueOf(todo.getId()), contact);
+//        table.insert(query);
+        return oldTodo;
+    }
+
     
     /**
      * Updates a todo into the storage.
@@ -149,12 +170,12 @@ public class StorageService {
 
     	String newDone = todo.getDone();
     	if(newDone!= null) {
+    		compareDone(storedTodo.getDone(), newDone, storedTodo.getTitle());
     		storedTodo.setBody(newDone);
     	}
     	
         return updateTodoFull(storedTodo);
     }
-
 
 
     /**
@@ -244,4 +265,22 @@ public class StorageService {
 
         return results;
     }
+    
+    /** 
+     * compares done fields and calls MessageService if value has gone from false to true
+     * @param oldDone
+     * @param newDone
+     */
+    public static void compareDone(String oldDone, String newDone, String title) {
+    	System.out.println("compareDone, oldDone = " + oldDone + ", newDone = " + newDone);
+    	if(oldDone.equalsIgnoreCase("false") && newDone.equalsIgnoreCase("true")) {
+    		try {
+    			System.out.println("sending message");
+    			MessageResource.send("\"" + title + "\" task has been marked as done.", messageFactory);
+    		} catch(Exception e){
+    			
+    		}
+    	}
+    }
+     
 }

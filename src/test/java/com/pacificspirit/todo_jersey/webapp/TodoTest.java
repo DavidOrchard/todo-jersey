@@ -45,7 +45,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
@@ -70,6 +69,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import static org.mockito.Mockito.*;
+
+import com.twilio.sdk.TwilioRestClient; 
+import com.twilio.sdk.resource.factory.MessageFactory;
+
+
 //import com.sun.jersey.client.apache.ApacheHttpClient;
 
 /**
@@ -89,14 +94,26 @@ public class TodoTest extends JerseyTest {
         TODO_2.setTitle("Jersey Bar");
         TODO_2.setBody("jersey@bar.com");
         TODO_2.setDone("false");
+
     }
 
     @Override
     protected Application configure() {
         enable(TestProperties.LOG_TRAFFIC);
         enable(TestProperties.DUMP_ENTITY);
+        final String ACCOUNT_SID = "AC5cc193fbbc0c65efa75c563ce340d54c"; 
+        final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
+    	 
+   		TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN); 
+   		MessageFactory messageFactory = mock(MessageFactory.class); 
+		 
+    	try {
+    		when(messageFactory.create(org.mockito.Matchers.anyList())).thenReturn(new com.twilio.sdk.resource.instance.Message(client, "123"));
+    	} catch(Exception e){
+    		System.out.println(e);
+    	}
 
-        final MyApplication application = new MyApplication();
+        final MyApplication application = new MyApplication(messageFactory);
         application.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
         return application;
     }
@@ -156,13 +173,52 @@ public class TodoTest extends JerseyTest {
         		path("" + todo.getId()).
         		request(MediaType.APPLICATION_JSON_TYPE).
                 put(Entity.entity(todo, MediaType.APPLICATION_JSON_TYPE));
-        final Todo todoNew = response.readEntity(Todo.class);
+        final Todo todoNewBody = response.readEntity(Todo.class);
         
         assertEquals(200, response.getStatus());
-        assertTrue(todoNew.getBody().contains("new body"));
-
+        assertTrue(todoNewBody.getBody().contains("new body"));
+        
+        todo.setTitle("new title");
+        response = target.
+        		path("" + todo.getId()).
+        		request(MediaType.APPLICATION_JSON_TYPE).
+                put(Entity.entity(todo, MediaType.APPLICATION_JSON_TYPE));
+        final Todo todoNewTitle = response.readEntity(Todo.class);
+        
+        assertEquals(200, response.getStatus());
+        assertTrue(todoNewTitle.getTitle().contains("new title"));
+        
         assertEquals(200, target.path("" + todo.getId()).request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
     }
+    
+    @Test
+    public void testUpdateTodoDone() throws Exception {
+   	 	final WebTarget target = target().
+                path("todo");
+        Response response = target.
+                request(MediaType.APPLICATION_JSON_TYPE).
+                post(Entity.entity(TODO_2, MediaType.APPLICATION_JSON_TYPE));
+
+        final Todo todo = response.readEntity(Todo.class);
+
+        assertEquals(200, response.getStatus());
+        assertNotNull(todo.getId());
+        
+        todo.setBody("new done");
+        todo.setDone("true");
+
+        response = target.
+        		path("" + todo.getId()).
+        		request(MediaType.APPLICATION_JSON_TYPE).
+                put(Entity.entity(todo, MediaType.APPLICATION_JSON_TYPE));
+        final Todo todoNewBody = response.readEntity(Todo.class);
+        
+        assertEquals(200, response.getStatus());
+        assertTrue(todoNewBody.getDone().contains("true"));
+        
+        assertEquals(200, target.path("" + todo.getId()).request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
+    }
+
     
     @Test
     public void testPartialUpdateTodo() throws Exception {

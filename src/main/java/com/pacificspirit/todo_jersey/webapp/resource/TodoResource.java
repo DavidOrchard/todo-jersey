@@ -87,6 +87,20 @@ public class TodoResource {
            final Todo todo) {
         return StorageService.addTodo(todo);
     }
+    
+    @POST
+    @Path("{id}/done")
+    @Consumes("application/json")
+//    @NotNull(message = "{todo.already.exist}")
+    @HasId
+    public Todo updateDone(
+            @DecimalMin(value = "0", message = "{todo.wrong.id}")
+            @PathParam("id") final Long id,
+            @NotNull 
+           final String done) {
+        return StorageService.updateTodoDone(id, done);
+    }
+
 
     @GET
     @NotNull
