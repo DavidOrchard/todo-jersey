@@ -40,7 +40,6 @@
 
 package com.pacificspirit.todo_jersey.webapp.domain;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -53,8 +52,7 @@ import org.hibernate.validator.constraints.Length;
 @XmlRootElement
 public class Todo {
 
-    @DecimalMin(value = "1")
-    private Long id;
+    private String id;
 
     @NotNull(message = "{todo.wrong.title}")
     @Length(min = 1, max = 100)
@@ -65,11 +63,11 @@ public class Todo {
 
     private String done;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(final String id) {
         this.id = id;
     }
 

@@ -51,7 +51,7 @@ import javax.validation.ParameterNameProvider;
 import javax.validation.Validation;
 
 import com.pacificspirit.todo_jersey.webapp.resource.TodoResource;
-import com.pacificspirit.todo_jersey.webapp.service.StorageService;
+import com.pacificspirit.todo_jersey.webapp.service.StorageServiceProvider;
 import com.twilio.sdk.resource.factory.MessageFactory;
 
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
@@ -82,7 +82,7 @@ public class MyApplication extends ResourceConfig {
         register(MoxyJsonFeature.class);
         register(JsonConfiguration.class);
         
-        StorageService.init(messageFactory);
+        StorageServiceProvider.init(messageFactory);
     }
 
     /**

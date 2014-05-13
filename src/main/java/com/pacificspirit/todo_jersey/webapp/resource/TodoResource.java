@@ -59,7 +59,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
-import com.pacificspirit.todo_jersey.webapp.service.StorageService;
+import com.pacificspirit.todo_jersey.webapp.service.*;
 import com.pacificspirit.todo_jersey.webapp.resource.HasId;
 import com.pacificspirit.todo_jersey.webapp.resource.AtLeastOneTodo;
 
@@ -77,15 +77,16 @@ public class TodoResource {
     @Context
     @NotNull
     private ResourceContext resourceContext;
+    private StorageService s  = StorageServiceProvider.get("mongo");
 
     @POST
     @Consumes("application/json")
     @NotNull(message = "{todo.already.exist}")
-    @HasId
+//    @HasId
     public Todo addTodo(
             @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
            final Todo todo) {
-        return StorageService.addTodo(todo);
+        return s.addTodo(todo);
     }
     
     @POST
@@ -94,28 +95,26 @@ public class TodoResource {
 //    @NotNull(message = "{todo.already.exist}")
     @HasId
     public Todo updateDone(
-            @DecimalMin(value = "0", message = "{todo.wrong.id}")
-            @PathParam("id") final Long id,
+            @PathParam("id") final String id,
             @NotNull 
            final String done) {
-        return StorageService.updateTodoDone(id, done);
+        return s.updateTodoDone(id, done);
     }
 
 
     @GET
     @NotNull
     public List<Todo> getTodos() {
-        return StorageService.findByBody("");
+        return s.get();
     }
 
     @GET
     @Path("{id}")
     @NotNull(message = "{todo.does.not.exist}")
-    @HasId
+//    @HasId
     public Todo getTodo(
-            @DecimalMin(value = "0", message = "{todo.wrong.id}")
-            @PathParam("id") final Long id) {
-        return StorageService.get(id);
+            @PathParam("id") final String id) {
+        return s.get(id);
     }
 
     @PUT
@@ -123,10 +122,8 @@ public class TodoResource {
     @Consumes("application/json")
      public Todo updateTodo(
             @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
-//    		@DecimalMin(value = "0", message = "{todo.wrong.id}")
-//            @PathParam("id") final Long id,
            final Todo todo) {
-        return StorageService.updateTodoFull(todo);
+        return s.updateTodoFull(todo);
     }
     
     @PATCH
@@ -134,16 +131,14 @@ public class TodoResource {
     @Consumes("application/json")
      public Todo updateTodoPartial(
             @NotNull @AtLeastOneTodo(message = "{todo.empty.means}")
-//    		@DecimalMin(value = "0", message = "{todo.wrong.id}")
-//            @PathParam("id") final Long id,
            final Todo todo) {
-        return StorageService.updateTodoPartial(todo);
+        return s.updateTodoPartial(todo);
     }
     
     @DELETE
     @NotNull @HasId
     public List<Todo> deleteTodos() {
-        return StorageService.clear();
+        return s.clear();
     }
 
     @DELETE
@@ -151,9 +146,8 @@ public class TodoResource {
     @NotNull(message = "{todo.does.not.exist}")
     @HasId
     public Todo deleteTodo(
-            @DecimalMin(value = "0", message = "{todo.wrong.id}")
-            @PathParam("id") final Long id) {
-        return StorageService.remove(id);
+            @PathParam("id") final String id) {
+        return s.remove(id);
     }
 
     @Path("search/{searchType}")

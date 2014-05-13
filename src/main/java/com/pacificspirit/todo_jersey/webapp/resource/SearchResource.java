@@ -77,12 +77,13 @@ public class SearchResource {
     public List<Todo> searchForTodo(
             @NotBlank(message = "{search.string.empty}") @QueryParam("q") final String searchValue) {
 
-        if ("title".equals(searchType)) {
-            return StorageService.findByTitle(searchValue);
-        } else if ("done".equals(searchType)) {
-            return StorageService.findByDone(searchValue);
-        } else {
-            return StorageService.findByBody(searchValue);
-        }
+//        if ("title".equals(searchType)) {
+//            return StorageService.findByTitle(searchValue);
+//        } else if ("done".equals(searchType)) {
+//            return StorageService.findByDone(searchValue);
+//        } else {
+//            return StorageService.findByBody(searchValue);
+//        }
+    	return null;
     }
 }
