@@ -298,20 +298,21 @@ public class TodoTest extends JerseyTest {
         // GET
         Response response = target.path("-1").request(MediaType.APPLICATION_JSON_TYPE).get();
 
-        assertEquals(400, response.getStatus());
+        assertEquals(404, response.getStatus());
+//        assertEquals("Todo with given ID does not exist.", response.getEntity().toString());
 
         Set<String> violationsMessageTemplates = getValidationMessageTemplates(response);
         assertEquals(1, violationsMessageTemplates.size());
-        assertTrue(violationsMessageTemplates.contains("{todo.wrong.id}"));
+        assertTrue(violationsMessageTemplates.contains("{todo.does.not.exist}"));
 
         // DELETE
         response = target.path("-2").request(MediaType.APPLICATION_JSON_TYPE).delete();
 
-        assertEquals(400, response.getStatus());
+        assertEquals(404, response.getStatus());
 
         violationsMessageTemplates = getValidationMessageTemplates(response);
         assertEquals(1, violationsMessageTemplates.size());
-        assertTrue(violationsMessageTemplates.contains("{todo.wrong.id}"));
+        assertTrue(violationsMessageTemplates.contains("{todo.does.not.exist}"));
     }
 
     private List<ValidationError> getValidationErrorList(final Response response) {

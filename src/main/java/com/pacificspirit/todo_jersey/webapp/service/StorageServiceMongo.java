@@ -201,19 +201,19 @@ public class StorageServiceMongo extends StorageService{
      */
     public Todo dBObject2Todo(DBObject dbObject, Todo todo) {
 
-		String title = dbObject.get("title").toString();
+		Object title = dbObject.get("title");
 		if(title != null) {
-			todo.setTitle(title);
+			todo.setTitle(title.toString());
 		}
 	
-		String body = dbObject.get("body").toString();
+		Object body = dbObject.get("body");
 		if(body != null) {
-			todo.setBody(body);
+			todo.setBody(body.toString());
 		}
 	
-		String done = dbObject.get("done").toString();
+		Object done = dbObject.get("done");
 		if(done != null) {
-			todo.setDone(done);
+			todo.setDone(done.toString());
 		}
 		String id = dbObject.get("_id").toString();
 		if(id != null) {
@@ -243,8 +243,10 @@ public class StorageServiceMongo extends StorageService{
      */
     public Todo remove(final String id) {
     	Todo removedTodo = get(id);
-    	BasicDBObject obj = new BasicDBObject("_id", new ObjectId(id));   	
-        todos.remove(obj);
+    	if(removedTodo != null) {
+    		BasicDBObject obj = new BasicDBObject("_id", new ObjectId(id));   	
+    		todos.remove(obj);
+    	}
         return removedTodo;
     }
 
@@ -255,7 +257,13 @@ public class StorageServiceMongo extends StorageService{
      * @return todo or {@code null} if the todo is not present in the storage.
      */
     public Todo get(final String id) {
-    	BasicDBObject queryObj = new BasicDBObject("_id", new ObjectId(id));   	
+    	ObjectId oid = null;
+    	try {
+    		oid = new ObjectId(id);
+    	} catch (Exception e){
+    		return null;
+    	}
+    	BasicDBObject queryObj = new BasicDBObject("_id", oid);   	
         DBObject obj = todos.findOne(queryObj);
         if(obj == null) {
         	return null;

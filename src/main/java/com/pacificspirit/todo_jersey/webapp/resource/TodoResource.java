@@ -40,6 +40,7 @@
 
 package com.pacificspirit.todo_jersey.webapp.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -51,14 +52,23 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
-
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
+import javax.validation.Configuration;
+import javax.validation.MessageInterpolator;
 import javax.validation.Valid;
+import javax.validation.Validation;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import javax.validation.metadata.ConstraintDescriptor;
+
+import org.glassfish.jersey.server.validation.ValidationError;
 
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.exceptions.CustomNotFoundException;
 import com.pacificspirit.todo_jersey.webapp.service.*;
 import com.pacificspirit.todo_jersey.webapp.resource.HasId;
 import com.pacificspirit.todo_jersey.webapp.resource.AtLeastOneTodo;
@@ -78,6 +88,28 @@ public class TodoResource {
     @NotNull
     private ResourceContext resourceContext;
     private StorageService s  = StorageServiceProvider.get("mongo");
+    private Configuration<?> configuration = Validation.byDefaultProvider().configure();
+	private MessageInterpolator m = configuration.getDefaultMessageInterpolator();
+	private MessageInterpolator.Context ctx = new MessageInterpolator.Context() {
+
+		@Override
+		public ConstraintDescriptor<?> getConstraintDescriptor() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Object getValidatedValue() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <T> T unwrap(Class<T> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}};
+
 
     @POST
     @Consumes("application/json")
@@ -110,12 +142,24 @@ public class TodoResource {
 
     @GET
     @Path("{id}")
-    @NotNull(message = "{todo.does.not.exist}")
 //    @HasId
     public Todo getTodo(
             @PathParam("id") final String id) {
-        return s.get(id);
+        Todo todo = s.get(id);
+        if(todo == null) {        	
+        	ValidationError err = new ValidationError();
+        	err.setMessage(m.interpolate("{todo.does.not.exist}", ctx));
+        	err.setMessageTemplate("{todo.does.not.exist}");
+        	// TODO: return list.  very annoying, I can't figure out how to get a List<ValidationError> to serialize
+//        	List<ValidationError> errList = new ArrayList<ValidationError>();
+//        	errList.add(err);
+        	throw new CustomNotFoundException(err);
+        }
+        
+        return todo;
     }
+
+
 
     @PUT
     @Path("{id}")
@@ -143,11 +187,21 @@ public class TodoResource {
 
     @DELETE
     @Path("{id}")
-    @NotNull(message = "{todo.does.not.exist}")
-    @HasId
+//    @HasId
     public Todo deleteTodo(
             @PathParam("id") final String id) {
-        return s.remove(id);
+    	Todo todo = s.remove(id);
+        if(todo == null) {        	
+        	ValidationError err = new ValidationError();
+        	err.setMessage(m.interpolate("{todo.does.not.exist}", ctx));
+        	err.setMessageTemplate("{todo.does.not.exist}");
+        	// TODO: return list.  very annoying, I can't figure out how to get a List<ValidationError> to serialize
+//        	List<ValidationError> errList = new ArrayList<ValidationError>();
+//        	errList.add(err);
+        	throw new CustomNotFoundException(err);
+        }
+
+        return todo;
     }
 
     @Path("search/{searchType}")
