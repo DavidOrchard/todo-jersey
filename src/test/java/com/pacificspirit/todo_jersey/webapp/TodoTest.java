@@ -144,6 +144,7 @@ public class TodoTest extends JerseyTest {
 
         assertEquals(200, response.getStatus());
         assertNotNull(todo.getId());
+        TODO_1.setId(todo.getId());
 
         final Response invalidResponse = target.
                 request(MediaType.APPLICATION_JSON_TYPE).
@@ -272,18 +273,18 @@ public class TodoTest extends JerseyTest {
                 path("todo");
 
         // GET
-        Response response = target.path("1").request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = target.path("123456789012345678901234").request(MediaType.APPLICATION_JSON_TYPE).get();
 
-        assertEquals(500, response.getStatus());
+        assertEquals(404, response.getStatus());
 
         Set<String> violationsMessageTemplates = getValidationMessageTemplates(response);
         assertEquals(1, violationsMessageTemplates.size());
         assertTrue(violationsMessageTemplates.contains("{todo.does.not.exist}"));
 
         // DELETE
-        response = target.path("1").request(MediaType.APPLICATION_JSON_TYPE).delete();
+        response = target.path("123456789012345678901234").request(MediaType.APPLICATION_JSON_TYPE).delete();
 
-        assertEquals(500, response.getStatus());
+        assertEquals(404, response.getStatus());
 
         violationsMessageTemplates = getValidationMessageTemplates(response);
         assertEquals(1, violationsMessageTemplates.size());
@@ -298,21 +299,21 @@ public class TodoTest extends JerseyTest {
         // GET
         Response response = target.path("-1").request(MediaType.APPLICATION_JSON_TYPE).get();
 
-        assertEquals(404, response.getStatus());
+        assertEquals(400, response.getStatus());
 //        assertEquals("Todo with given ID does not exist.", response.getEntity().toString());
 
         Set<String> violationsMessageTemplates = getValidationMessageTemplates(response);
         assertEquals(1, violationsMessageTemplates.size());
-        assertTrue(violationsMessageTemplates.contains("{todo.does.not.exist}"));
+        assertTrue(violationsMessageTemplates.contains("{invalid.id}"));
 
         // DELETE
         response = target.path("-2").request(MediaType.APPLICATION_JSON_TYPE).delete();
 
-        assertEquals(404, response.getStatus());
+        assertEquals(400, response.getStatus());
 
         violationsMessageTemplates = getValidationMessageTemplates(response);
         assertEquals(1, violationsMessageTemplates.size());
-        assertTrue(violationsMessageTemplates.contains("{todo.does.not.exist}"));
+        assertTrue(violationsMessageTemplates.contains("{invalid.id}"));
     }
 
     private List<ValidationError> getValidationErrorList(final Response response) {
@@ -354,87 +355,87 @@ public class TodoTest extends JerseyTest {
         assertTrue(messageTemplates.contains("{todo.empty.means}"));
         assertEquals(3, messageTemplates.size());
     }
-
-    @Test
-    public void testSearchByUnknown() throws Exception {
-        final Response response = target().
-                path("todo").
-                path("search/unknown").
-                queryParam("q", "er").
-                request(MediaType.APPLICATION_JSON_TYPE).
-                get();
-
-        assertEquals(400, response.getStatus());
-
-        final Set<String> messageTemplates = getValidationMessageTemplates(response);
-        assertEquals(1, messageTemplates.size());
-        assertTrue(messageTemplates.contains("{com.pacificspirit.todo_jersey.webapp.constraint.SearchType.message}"));
-    }
-
-    @Test
-    public void testSearchByTitleEmpty() throws Exception {
-        final Response response = target().
-                path("todo").
-                path("search/title").
-                queryParam("q", "er").
-                request(MediaType.APPLICATION_JSON_TYPE).
-                get();
-
-        assertEquals(200, response.getStatus());
-
-        final List<Todo> result = response.readEntity(new GenericType<List<Todo>>() {});
-        assertEquals(0, result.size());
-    }
-
-    @Test
-    public void testSearchByBodyInvalid() throws Exception {
-        final Response response = target().
-                path("todo").
-                path("search/body").
-                queryParam("q", (String) null).
-                request(MediaType.APPLICATION_JSON_TYPE).
-                get();
-
-        assertEquals(400, response.getStatus());
-
-        final Set<String> messageTemplates = getValidationMessageTemplates(response);
-        assertEquals(1, messageTemplates.size());
-        assertTrue(messageTemplates.contains("{search.string.empty}"));
-    }
-
-    @Test
-    public void testSearchByTitle() throws Exception {
-        final WebTarget target = target().path("todo");
-        target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(TODO_1, MediaType.APPLICATION_JSON_TYPE));
-        target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(TODO_2, MediaType.APPLICATION_JSON_TYPE));
-
-        Response response = target.
-                path("search/title").
-                queryParam("q", "er").
-                request(MediaType.APPLICATION_JSON_TYPE).
-                get();
-
-        List<Todo> todos = response.readEntity(new GenericType<List<Todo>>() {});
-
-        assertEquals(200, response.getStatus());
-        assertEquals(2, todos.size());
-
-        for (final Todo todo : todos) {
-            assertTrue(todo.getTitle().contains("er"));
-        }
-
-        response = target.
-                path("search/title").
-                queryParam("q", "Foo").
-                request(MediaType.APPLICATION_JSON_TYPE).
-                get();
-
-        todos = response.readEntity(new GenericType<List<Todo>>() {});
-
-        assertEquals(200, response.getStatus());
-        assertEquals(1, todos.size());
-        assertTrue(todos.get(0).getTitle().contains("Foo"));
-
-        assertEquals(200, target.request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
-    }
+//
+//    @Test
+//    public void testSearchByUnknown() throws Exception {
+//        final Response response = target().
+//                path("todo").
+//                path("search/unknown").
+//                queryParam("q", "er").
+//                request(MediaType.APPLICATION_JSON_TYPE).
+//                get();
+//
+//        assertEquals(400, response.getStatus());
+//
+//        final Set<String> messageTemplates = getValidationMessageTemplates(response);
+//        assertEquals(1, messageTemplates.size());
+//        assertTrue(messageTemplates.contains("{com.pacificspirit.todo_jersey.webapp.constraint.SearchType.message}"));
+//    }
+//
+//    @Test
+//    public void testSearchByTitleEmpty() throws Exception {
+//        final Response response = target().
+//                path("todo").
+//                path("search/title").
+//                queryParam("q", "er").
+//                request(MediaType.APPLICATION_JSON_TYPE).
+//                get();
+//
+//        assertEquals(200, response.getStatus());
+//
+//        final List<Todo> result = response.readEntity(new GenericType<List<Todo>>() {});
+//        assertEquals(0, result.size());
+//    }
+//
+//    @Test
+//    public void testSearchByBodyInvalid() throws Exception {
+//        final Response response = target().
+//                path("todo").
+//                path("search/body").
+//                queryParam("q", (String) null).
+//                request(MediaType.APPLICATION_JSON_TYPE).
+//                get();
+//
+//        assertEquals(400, response.getStatus());
+//
+//        final Set<String> messageTemplates = getValidationMessageTemplates(response);
+//        assertEquals(1, messageTemplates.size());
+//        assertTrue(messageTemplates.contains("{search.string.empty}"));
+//    }
+//
+//    @Test
+//    public void testSearchByTitle() throws Exception {
+//        final WebTarget target = target().path("todo");
+//        target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(TODO_1, MediaType.APPLICATION_JSON_TYPE));
+//        target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(TODO_2, MediaType.APPLICATION_JSON_TYPE));
+//
+//        Response response = target.
+//                path("search/title").
+//                queryParam("q", "er").
+//                request(MediaType.APPLICATION_JSON_TYPE).
+//                get();
+//
+//        List<Todo> todos = response.readEntity(new GenericType<List<Todo>>() {});
+//
+//        assertEquals(200, response.getStatus());
+//        assertEquals(2, todos.size());
+//
+//        for (final Todo todo : todos) {
+//            assertTrue(todo.getTitle().contains("er"));
+//        }
+//
+//        response = target.
+//                path("search/title").
+//                queryParam("q", "Foo").
+//                request(MediaType.APPLICATION_JSON_TYPE).
+//                get();
+//
+//        todos = response.readEntity(new GenericType<List<Todo>>() {});
+//
+//        assertEquals(200, response.getStatus());
+//        assertEquals(1, todos.size());
+//        assertTrue(todos.get(0).getTitle().contains("Foo"));
+//
+//        assertEquals(200, target.request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
+//    }
 }

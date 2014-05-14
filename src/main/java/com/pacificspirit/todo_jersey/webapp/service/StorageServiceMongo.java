@@ -99,7 +99,7 @@ public class StorageServiceMongo extends StorageService{
      
     		DBObject found = todos.findOne(obj);
      
-    		if (found == null) {
+    		if (found != null) {
     			return null;
     		}
     	}
@@ -107,6 +107,7 @@ public class StorageServiceMongo extends StorageService{
         obj = new BasicDBObject();
         todo2DBObject(todo, obj);                
         todos.insert(obj);
+        todo.setId(obj.getString("_id"));
 
         return todo;
     }

@@ -144,7 +144,7 @@ public class TodoResource {
     @Path("{id}")
 //    @HasId
     public Todo getTodo(
-            @PathParam("id") final String id) {
+            @PathParam("id") @ValidId(message = "{invalid.id}") final String id) {
         Todo todo = s.get(id);
         if(todo == null) {        	
         	ValidationError err = new ValidationError();
@@ -189,7 +189,7 @@ public class TodoResource {
     @Path("{id}")
 //    @HasId
     public Todo deleteTodo(
-            @PathParam("id") final String id) {
+            @PathParam("id") @ValidId(message = "{invalid.id}") final String id) {
     	Todo todo = s.remove(id);
         if(todo == null) {        	
         	ValidationError err = new ValidationError();
