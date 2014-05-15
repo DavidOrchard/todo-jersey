@@ -48,7 +48,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
-import com.twilio.sdk.resource.factory.MessageFactory;
 
 /**
  * Simple storage of todos.
@@ -60,9 +59,6 @@ public class StorageServiceInMemory extends StorageService{
     private final AtomicLong todoCounter = new AtomicLong(0);
     private final Map<String, Todo> todos = new HashMap<String, Todo>();
     
-    public StorageServiceInMemory(MessageFactory mf){
-    	super(mf);
-    }
     /**
      * Adds a todo into the storage. If a todo with given data already exist {@code null} value is returned.
      *
