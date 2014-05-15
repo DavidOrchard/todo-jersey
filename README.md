@@ -134,7 +134,7 @@ But very straightforward items were hard.
 
 *** MongoDB ***
 
-Reasonable.  My complaints are about inability to easily convert JSON or beans to BSON
+Reasonable.  My complaints are about inability to easily convert JSON or annotated POJOs to BSON.  I would have thought it would be incredibly common to do that, but I had to write a Todo2DBObject and DBObject2Todo converters.  That's frankly awful to have to manually edit 2 functions every time an attribute is added/changed/deleted on the type.
 
 *** Twilio ***
 
@@ -147,5 +147,5 @@ Reasonable as well.  There seems to be a lot of change in the api that isn't tra
 - sometimes messages return an "status":"ok", but the getSucceeded() call checks for status AND an "acknowledged":"true".  This always generates a Java NPE
 - the update index responses with "added":true, but the Index.getSucceeded() checks for status, always generating an NPE.
 
-This churn is evident in the 0.1.0 library that removes the check for status and acknowledged and then the 0.1.1 added part of the check back in.
+This churn is evident in the 0.1.0 library that commented out the check for status and acknowledged and then the 0.1.1 added part of the check back in.
 

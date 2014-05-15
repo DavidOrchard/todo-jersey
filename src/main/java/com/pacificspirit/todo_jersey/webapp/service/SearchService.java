@@ -138,7 +138,7 @@ public class SearchService {
 	public static List<Todo> search(String term) {
 		try {
 	        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-			searchSourceBuilder.query(QueryBuilders.queryString(term));
+			searchSourceBuilder.query(QueryBuilders.queryString(term).field("title", 2).field("body"));
 	
 			Search search = (Search) new Search.Builder(searchSourceBuilder.toString())
 			                                // multiple index or types can be added.
