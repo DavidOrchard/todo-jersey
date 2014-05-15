@@ -1,11 +1,6 @@
 package com.pacificspirit.todo_jersey.webapp.exceptions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.validation.ValidationError;
