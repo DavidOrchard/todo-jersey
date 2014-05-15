@@ -42,7 +42,7 @@
 
 'use strict';
 
-function ContactController($scope, $resource, Contact) {
+function TodoController($scope, $resource, Todo, Todos) {
 
     // Common
     $scope.httpStatus = '';
@@ -63,7 +63,7 @@ function ContactController($scope, $resource, Contact) {
     };
 
     $scope.reset = function() {
-        $scope.contact = {};
+        $scope.todo = {};
         $scope.searchValue = '';
 
         $scope.clearErrors();
@@ -71,7 +71,7 @@ function ContactController($scope, $resource, Contact) {
 
     $scope.refresh = function() {
         $scope.reset();
-        $scope.contacts = Contact.query();
+        $scope.todos = Todo.query();
     };
 
     $scope.remove = function(array, id) {
@@ -84,15 +84,19 @@ function ContactController($scope, $resource, Contact) {
         });
     };
 
-    // Contact
-    $scope.contacts = [];
-    $scope.contact = {};
+    $scope.removeAll = function(array) {
+        array.splice(0, array.length);
+    };
 
-    $scope.addContact = function() {
-        Contact.save(
-            $scope.contact,
+    // Todo
+    $scope.todos = [];
+    $scope.todo = {};
+
+    $scope.addTodo = function() {
+        Todo.save(
+            $scope.todo,
             function(data) {
-                $scope.contacts.push(data);
+                $scope.todos.push(data);
                 $scope.reset();
             },
             function(response) {
@@ -101,12 +105,25 @@ function ContactController($scope, $resource, Contact) {
         );
     };
 
-    $scope.removeContact = function(id) {
-        Contact.remove(
-            {contactId:id},
+    $scope.removeTodo = function(id) {
+        Todo.remove(
+            {todoId:id},
             function(data) {
-                $scope.remove($scope.contacts, data.id);
+                $scope.remove($scope.todos, data.id);
             },
+            function(response) {
+                $scope.processErrors(response);
+            }
+        );
+    };
+
+    $scope.removeTodos = function() {
+        Todos.remove(
+            {},
+            function(data) {
+                $scope.removeAll($scope.todos);
+                $scope.todo = {};
+             },
             function(response) {
                 $scope.processErrors(response);
             }
@@ -115,34 +132,17 @@ function ContactController($scope, $resource, Contact) {
 
     // Search
 
-    $scope.searchType = 'name';
     $scope.searchValue = '';
 
-    $scope.searchIcon = 'user';
+    $scope.searchIcon = 'question-sign';
     $scope.searchCollapse = true;
 
-    $scope.changeSearchType = function(type) {
-        $scope.searchType = type;
-
-        if (type == 'phone') {
-            $scope.searchIcon = 'home';
-        } else if (type == 'email') {
-            $scope.searchIcon = 'envelope';
-        } else if (type == 'unknown') {
-            $scope.searchIcon = 'question-sign';
-        }  else {
-            $scope.searchIcon = 'user';
-        }
-
-        $scope.searchCollapse = true;
-    };
-
     $scope.search = function() {
-        $resource('api/contact/search/:searchType?q=:searchValue').
+        $resource('api/todo/search?q=:searchValue').
             query(
-                {searchType:$scope.searchType, searchValue:$scope.searchValue},
+                {searchValue:$scope.searchValue},
                 function(data) {
-                    $scope.contacts = data;
+                    $scope.todos = data;
                     $scope.reset();
                 },
                 function(response) {

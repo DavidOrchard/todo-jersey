@@ -42,13 +42,13 @@
 
 /* App Module */
 
-var contact = angular.module('contact', ['contactServices', 'ngResource']).
+var todo = angular.module('todo', ['todoServices', 'ngResource']).
     config(
         ['$routeProvider', function($routeProvider) {
             $routeProvider.
-                when('/contact', {templateUrl: 'contact.html', controller: ContactController}).
-                /*when('/contact/:contactId', {templateUrl: 'contact-detail.html', controller: ContactController}).*/
+                when('/todo', {templateUrl: 'todo.html', controller: TodoController}).
+                /*when('/todo/:todoId', {templateUrl: 'todo-detail.html', controller: TodoController}).*/
 
-                otherwise({redirectTo: '/contact'});
+                otherwise({redirectTo: '/todo'});
         }]
     );

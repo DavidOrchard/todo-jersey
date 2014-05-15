@@ -43,22 +43,13 @@
     <div class="container">
         <div class="row">
             <div class="page-header">
-                <h1>Contact List <small>Bean Validation Example</small></h1>
+                <h1>Todo List</h1>
             </div>
             <div class="span3">
                 <form>
                     <fieldset>
                         <legend>Search</legend>
                         <div class="input-prepend input-append">
-                            <div class="btn-group" ng-class="{open: !searchCollapse}">
-                                <button class="btn dropdown-toggle" ng-click="searchCollapse=!searchCollapse"><i class="icon-{{searchIcon}}"></i> <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a ng-click="changeSearchType('name')"><i class="icon-user"></i> Name</a></li>
-                                    <li><a ng-click="changeSearchType('email')"><i class="icon-envelope"></i> Email</a></li>
-                                    <li><a ng-click="changeSearchType('phone')"><i class="icon-home"></i> Phone</a></li>
-                                    <li><a ng-click="changeSearchType('unknown')"><i class="icon-question-sign"></i> Invalid</a></li>
-                                </ul>
-                            </div>
                             <input class="span2" type="text" ng-model="searchValue" />
                             <button class="btn" type="button" ng-click="search()"><i class="icon-search"></i></button>
                         </div>
@@ -66,26 +57,32 @@
                 </form>
                 <form>
                     <fieldset>
-                        <legend>Add Contact</legend>
+                        <legend>Add Todo</legend>
                         <div class="input-prepend">
-                            <span class="add-on"><i class="icon-user"></i></span>
-                            <input type="text" placeholder="Name" ng-model="contact.fullName" null-if-empty />
+                            <!-- <span class="add-on"><i class="icon-user"></i></span> -->
+                            <input type="text" placeholder="Title" ng-model="todo.title" null-if-empty />
                         </div>
                         <div class="input-prepend">
-                            <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input type="text" placeholder="Email" ng-model="contact.email" null-if-empty />
+                            <!-- <span class="add-on"><i class="icon-envelope"></i></span> -->
+                            <input type="text" placeholder="Body" ng-model="todo.body" null-if-empty />
                         </div>
                         <div class="input-prepend">
-                            <span class="add-on"><i class="icon-home"></i></span>
-                            <input type="text" placeholder="Phone" ng-model="contact.phone" null-if-empty />
+                            <!-- <span class="add-on"><i class="icon-home"></i></span> -->
+                            <input type="text" placeholder="Done" ng-model="todo.done" null-if-empty />
                         </div>
-                        <button class="btn" type="submit" ng-click="addContact()">Add</button>
+                        <button class="btn" type="submit" ng-click="addTodo()">Add</button>
                     </fieldset>
                 </form>
                 <form>
                     <fieldset>
                         <legend>Refresh</legend>
                         <button class="btn" type="submit" ng-click="refresh()"><i class="icon-refresh"></i> Refresh</button>
+                    </fieldset>
+                </form>
+                <form>
+                    <fieldset>
+                        <legend>Remove All</legend>
+                        <button class="btn" type="submit" ng-click="removeTodos()"><i class="icon-trash"></i> Remove All</button>
                     </fieldset>
                 </form>
             </div>
@@ -102,22 +99,22 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
+                        <th>Title</th>
+                        <th>Body</th>
+                        <th>Done</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                        <tr ng-hide="contacts[0]">
-                            <td colspan="5" style="text-align: center">No contacts found.</td>
+                        <tr ng-hide="todos[0]">
+                            <td colspan="5" style="text-align: center">No todos found.</td>
                         </tr>
-                        <tr ng-show="contacts[0]" ng-repeat="contact in contacts">
-                            <td>{{contact.id}}</td>
-                            <td>{{contact.fullName}}</td>
-                            <td>{{contact.email}}</td>
-                            <td>{{contact.phone}}</td>
-                            <td><a ng-click="removeContact(contact.id)"><i class="icon-trash"></i></a></td>
+                        <tr ng-show="todos[0]" ng-repeat="todo in todos">
+                            <td>{{todo.id}}</td>
+                            <td>{{todo.title}}</td>
+                            <td>{{todo.body}}</td>
+                            <td>{{todo.done}}</td>
+                            <td><a ng-click="removeTodo(todo.id)"><i class="icon-trash"></i></a></td>
                         </tr>
                     </tbody>
                 </table>

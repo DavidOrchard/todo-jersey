@@ -182,7 +182,6 @@ public class TodoResource {
     }
     
     @DELETE
-    @NotNull @HasId
     public List<Todo> deleteTodos() {
         List<Todo> todos = s.clear();
         SearchService.clear();

@@ -42,13 +42,22 @@
 
 /* Services */
 
-angular.module('contactServices', ['ngResource']).
-    factory('Contact', function ($resource) {
-        return $resource('api/contact/:contactId', {}, {
+angular.module('todoServices', ['ngResource']).
+    factory('Todo', function ($resource) {
+        return $resource('api/todo/:todoId', {}, {
             remove:{
                 method:"DELETE",
                 isArray:false,
                 headers:{'Accept':'application/json', 'Content-Type':'application/json'}
+            }
+        });
+    }).
+    factory('Todos', function ($resource) {
+        return $resource('api/todo', {}, {
+            remove:{
+                method:"DELETE",
+                isArray:true,
+                headers:{'Accept':'application/json'}
             }
         });
     })

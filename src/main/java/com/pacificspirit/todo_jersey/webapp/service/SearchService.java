@@ -35,7 +35,7 @@ public class SearchService {
 	 JestClientFactory factory = new JestClientFactory();
 	 factory.setClientConfig(clientConfig);
 	 client = factory.getObject();
-	 //index();
+	 index();
 	}
 	
 	public static void clear() {
@@ -49,12 +49,16 @@ public class SearchService {
             	client.execute(deleteIndex);
 	        } 
 		} catch (IOException e) {
-	        	System.out.println(e);
+			System.out.println("SearchService.clear");
+        	System.out.println(e);
 	//          logger.error("Indexing error", e);
-	        } catch (Exception e) {
-	        	System.out.println(e);
+	    } catch (Exception e) {
+	    	System.out.println("SearchService.clear");
+        	System.out.println(e);
 	//          logger.error("Indexing error", e);
-	        }
+	    } finally {
+	    	index();
+	    }
 	}
 	
 	/*
@@ -65,7 +69,6 @@ public class SearchService {
 
         try {
             
-        	clear();
         	IndicesExists indicesExists = new IndicesExists.Builder(indexName).build();
             JestResult result = client.execute(indicesExists);
 
@@ -74,15 +77,17 @@ public class SearchService {
                 CreateIndex createIndex = new CreateIndex.Builder(indexName).build();
                 client.execute(createIndex);
             }
-
  
         } catch (IOException e) {
+        	System.out.println("SearchService.index");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         } catch (Exception e) {
+        	System.out.println("SearchService.index");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         }
+    	System.out.println("SearchService.index done");
 	}
 	
 	public static void add(Todo todo) {
@@ -97,9 +102,11 @@ public class SearchService {
 	        System.out.println(result.getJsonString());
 
         } catch (IOException e) {
+        	System.out.println("SearchService.add");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         } catch (Exception e) {
+        	System.out.println("SearchService.add");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         }
@@ -117,9 +124,11 @@ public class SearchService {
 	        System.out.println(result.getJsonString());
 
         } catch (IOException e) {
+        	System.out.println("SearchService.remove");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         } catch (Exception e) {
+        	System.out.println("SearchService.remove");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         }
@@ -144,8 +153,12 @@ public class SearchService {
 			}
 			return result.getSourceAsObjectList(Todo.class);
         } catch (IOException e) {
+        	System.out.println("SearchService.search");
+        	System.err.print(e);
+        	
 //            logger.error("Search error", e);
         } catch (Exception e) {
+        	System.out.println("SearchService.search");
         	System.err.print(e);
 //            logger.error("Search error", e);
         }

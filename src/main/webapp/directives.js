@@ -42,7 +42,7 @@
 
 /* Directives */
 
-contact.directive('nullIfEmpty', [function () {
+todo.directive('nullIfEmpty', [function () {
         return {
             require: 'ngModel',
             link: function (scope, elm, attr, ctrl) {
