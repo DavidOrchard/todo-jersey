@@ -1,6 +1,5 @@
 package com.pacificspirit.todo_jersey.webapp.service;
 
-import java.util.Collection;
 import java.util.List;
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
 
@@ -33,7 +32,7 @@ public interface StorageServiceIntf {
      * @param todo todo to be updated, must contain an id field
      * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
      */
-    public Todo updateTodoDone(final String id, final String done);
+    public Todo updateTodoDone(final String id, final boolean done);
 
     
     /**

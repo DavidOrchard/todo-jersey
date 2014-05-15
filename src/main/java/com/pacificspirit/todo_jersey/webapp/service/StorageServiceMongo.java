@@ -85,7 +85,7 @@ public class StorageServiceMongo extends StorageService{
     	if (found == null) {
     		return null;
     	}
-    	compareDone(found.get("done").toString(), todo.getDone(), found.get("title").toString());
+    	compareDone(found.get("done").toString().contains("done"), todo.getDone(), found.get("title").toString());
     	
         todo2DBObject(todo, obj);
         todos.update(found, obj);
@@ -99,11 +99,11 @@ public class StorageServiceMongo extends StorageService{
      * @param todo todo to be updated, must contain an id field
      * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
      */
-    public Todo updateTodoDone(final String id, final String done) {
+    public Todo updateTodoDone(final String id, final boolean done) {
     	BasicDBObject obj = new BasicDBObject("_id", new ObjectId(id.toString()));     
     	DBObject found = todos.findOne(obj);
     	
-    	compareDone(found.get("done").toString(), done, found.get("title").toString());
+    	compareDone(found.get("done").toString().contains("true"), done, found.get("title").toString());
     	todos.update(found, new BasicDBObject("$set", new BasicDBObject("done", done)));
         Todo todo = new Todo();
         dBObject2Todo(found, todo);
@@ -141,11 +141,9 @@ public class StorageServiceMongo extends StorageService{
 			dbObject.append("body", body);
 		}
 	
-		String done = todo.getDone();
-		if(done!= null) {
-			compareDone(dbObject.getString("done"), done, dbObject.getString("title"));
-			dbObject.append("done", done);
-		}
+		boolean done = todo.getDone();
+		compareDone(dbObject.getBoolean("done"), done, dbObject.getString("title"));
+		dbObject.append("done", done);
 		return dbObject;
     }
     
@@ -169,7 +167,7 @@ public class StorageServiceMongo extends StorageService{
 	
 		Object done = dbObject.get("done");
 		if(done != null) {
-			todo.setDone(done.toString());
+			todo.setDone(done.toString().contains("true"));
 		}
 		String id = dbObject.get("_id").toString();
 		if(id != null) {

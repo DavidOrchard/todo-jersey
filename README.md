@@ -134,7 +134,7 @@ But very straightforward items were hard.
 
 *** MongoDB ***
 
-Reasonable.  My complaints are about inability to easily convert JSON or annotated POJOs to BSON.  I would have thought it would be incredibly common to do that, but I had to write a Todo2DBObject and DBObject2Todo converters.  That's frankly awful to have to manually edit 2 functions every time an attribute is added/changed/deleted on the type.
+Reasonable.  My complaints are about inability to easily convert JSON or annotated POJOs to BSON.  I would have thought it would be incredibly common to do that, but I had to write a Todo2DBObject and DBObject2Todo converters.  That's frankly awful to have to manually edit 2 functions every time an attribute is added/changed/deleted on the type.  And I don't want to have to convert my type into a Map to use the new DBObject(Map) constructor.
 
 *** Twilio ***
 

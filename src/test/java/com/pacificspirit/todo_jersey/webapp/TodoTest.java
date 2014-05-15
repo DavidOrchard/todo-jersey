@@ -87,12 +87,12 @@ public class TodoTest extends JerseyTest {
         TODO_1 = new Todo();
         TODO_1.setBody("hi");
         TODO_1.setTitle("Jersey Foo");
-        TODO_1.setDone("true");
+        TODO_1.setDone(true);
 
         TODO_2 = new Todo();
         TODO_2.setTitle("Jersey Bar");
         TODO_2.setBody("jersey@bar.com");
-        TODO_2.setDone("false");
+        TODO_2.setDone(false);
 
     }
 
@@ -207,7 +207,7 @@ public class TodoTest extends JerseyTest {
         assertNotNull(todo.getId());
         
         todo.setBody("new done");
-        todo.setDone("true");
+        todo.setDone(true);
 
         response = target.
         		path("" + todo.getId()).
@@ -216,7 +216,7 @@ public class TodoTest extends JerseyTest {
         final Todo todoNewBody = response.readEntity(Todo.class);
         
         assertEquals(200, response.getStatus());
-        assertTrue(todoNewBody.getDone().contains("true"));
+        assertTrue(todoNewBody.getDone());
         
         assertEquals(200, target.path("" + todo.getId()).request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
     }
@@ -336,8 +336,7 @@ public class TodoTest extends JerseyTest {
     @Test
     public void testAddInvalidTodo() throws Exception {
          final Todo entity = new Todo();
-        entity.setDone("Crrrn");
-
+        
         final Response response = target().
                 path("todo").
                 request(MediaType.APPLICATION_JSON_TYPE).
@@ -352,9 +351,8 @@ public class TodoTest extends JerseyTest {
 
         final Set<String> messageTemplates = getValidationMessageTemplates(validationErrorList);
         assertTrue(messageTemplates.contains("{todo.wrong.title}"));
-        assertTrue(messageTemplates.contains("{todo.wrong.done}"));
         assertTrue(messageTemplates.contains("{todo.empty.means}"));
-        assertEquals(3, messageTemplates.size());
+        assertEquals(2, messageTemplates.size());
     }
 //
 //    @Test

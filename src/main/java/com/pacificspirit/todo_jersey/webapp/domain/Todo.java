@@ -61,7 +61,7 @@ public class Todo {
     @Length(min = 0, max = 5000, message = "{todo.wrong.body}")
     private String body;
 
-    private String done;
+    private Boolean done = false;
 
     public String getId() {
         return id;
@@ -87,12 +87,11 @@ public class Todo {
         this.body = body;
     }
 
-    @Pattern(message = "{todo.wrong.done}", regexp = "(true|false)")
-    public String getDone() {
+    public boolean getDone() {
         return done;
     }
 
-    public void setDone(final String done) {
+    public void setDone(final boolean done) {
         this.done = done;
     }
 
@@ -113,7 +112,7 @@ public class Todo {
         if (title != null ? !title.equals(that.title) : that.title != null) {
             return false;
         }
-        if (done != null ? !done.equals(that.done) : that.done != null) {
+        if (done != that.done) {
             return false;
         }
 
@@ -124,7 +123,7 @@ public class Todo {
     public int hashCode() {
         int result = title != null ? title.hashCode() : 0;
         result = 31 * result + (body != null ? body.hashCode() : 0);
-        result = 31 * result + (done != null ? done.hashCode() : 0);
+        result = 31 * result + (done  ? 1 : 0);
         return result;
     }
 }

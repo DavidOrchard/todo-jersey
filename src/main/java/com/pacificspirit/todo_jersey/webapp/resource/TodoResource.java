@@ -130,8 +130,7 @@ public class TodoResource {
     @HasId
     public Todo updateDone(
             @PathParam("id") final String id,
-            @NotNull 
-           final String done) {
+           final Boolean done) {
         return s.updateTodoDone(id, done);
     }
 

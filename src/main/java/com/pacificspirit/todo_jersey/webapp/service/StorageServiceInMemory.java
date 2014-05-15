@@ -95,7 +95,7 @@ public class StorageServiceInMemory extends StorageService{
      * @param todo todo to be updated, must contain an id field
      * @return todo with pre-filled {@code id} field, {@code null} if the todo already exist in the storage.
      */
-    public Todo updateTodoDone(final String id, final String done) {
+    public Todo updateTodoDone(final String id, final boolean done) {
         Todo oldTodo = todos.get(id);
         compareDone(oldTodo.getDone(), done, oldTodo.getTitle());
         oldTodo.setDone(done);
@@ -126,11 +126,9 @@ public class StorageServiceInMemory extends StorageService{
     		storedTodo.setBody(newBody);
     	}
 
-    	String newDone = todo.getDone();
-    	if(newDone!= null) {
-    		compareDone(storedTodo.getDone(), newDone, storedTodo.getTitle());
-    		storedTodo.setBody(newDone);
-    	}
+    	boolean newDone = todo.getDone();
+    	compareDone(storedTodo.getDone(), newDone, storedTodo.getTitle());
+    	storedTodo.setDone(newDone);
     	
         return updateTodoFull(storedTodo);
     }
@@ -177,61 +175,61 @@ public class StorageServiceInMemory extends StorageService{
     }
 
 
-    /**
-     * Finds todos whose email contains {@code emailPart} as a substring.
-     *
-     * @param titlePart search phrase.
-     * @return list of matched todos or an empty list.
-     */
-    public List<Todo> findByTitle(final String titlePart) {
-        final List<Todo> results = new ArrayList<Todo>();
-
-        for (final Todo todo : todos.values()) {
-            final String title = todo.getTitle();
-            if (title != null && title.contains(titlePart)) {
-                results.add(todo);
-            }
-        }
-
-        return results;
-    }
-
-    /**
-     * Finds todos whose name contains {@code namePart} as a substring.
-     *
-     * @param bodyPart search phrase.  empty means match any including empty or non-existant body parts
-     * @return list of matched todos or an empty list.
-     */
-    public List<Todo> findByBody(final String bodyPart) {
-        final List<Todo> results = new ArrayList<Todo>();
-
-        for (final Todo todo : todos.values()) {
-        	final String body = todo.getBody();
-        	if ((bodyPart.length() == 0) || (body != null && body.contains(bodyPart))) {
-        		results.add(todo);
-             }
-        }
-
-        return results;
-    }
-
-    /**
-     * Finds todos whose phone contains {@code phonePart} as a substring.
-     *
-     * @param donePart search phrase.
-     * @return list of matched todos or an empty list.
-     */
-    public List<Todo> findByDone(final String donePart) {
-        final List<Todo> results = new ArrayList<Todo>();
-
-        for (final Todo todo : todos.values()) {
-            final String phone = todo.getDone();
-            if (phone != null && phone.contains(donePart)) {
-                results.add(todo);
-            }
-        }
-
-        return results;
-    }
+//    /**
+//     * Finds todos whose email contains {@code emailPart} as a substring.
+//     *
+//     * @param titlePart search phrase.
+//     * @return list of matched todos or an empty list.
+//     */
+//    public List<Todo> findByTitle(final String titlePart) {
+//        final List<Todo> results = new ArrayList<Todo>();
+//
+//        for (final Todo todo : todos.values()) {
+//            final String title = todo.getTitle();
+//            if (title != null && title.contains(titlePart)) {
+//                results.add(todo);
+//            }
+//        }
+//
+//        return results;
+//    }
+//
+//    /**
+//     * Finds todos whose name contains {@code namePart} as a substring.
+//     *
+//     * @param bodyPart search phrase.  empty means match any including empty or non-existant body parts
+//     * @return list of matched todos or an empty list.
+//     */
+//    public List<Todo> findByBody(final String bodyPart) {
+//        final List<Todo> results = new ArrayList<Todo>();
+//
+//        for (final Todo todo : todos.values()) {
+//        	final String body = todo.getBody();
+//        	if ((bodyPart.length() == 0) || (body != null && body.contains(bodyPart))) {
+//        		results.add(todo);
+//             }
+//        }
+//
+//        return results;
+//    }
+//
+//    /**
+//     * Finds todos whose phone contains {@code phonePart} as a substring.
+//     *
+//     * @param donePart search phrase.
+//     * @return list of matched todos or an empty list.
+//     */
+//    public List<Todo> findByDone(final String donePart) {
+//        final List<Todo> results = new ArrayList<Todo>();
+//
+//        for (final Todo todo : todos.values()) {
+//            final String phone = todo.getDone();
+//            if (phone != null && phone.contains(donePart)) {
+//                results.add(todo);
+//            }
+//        }
+//
+//        return results;
+//    }
      
 }

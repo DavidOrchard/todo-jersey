@@ -68,7 +68,10 @@
                         </div>
                         <div class="input-prepend">
                             <!-- <span class="add-on"><i class="icon-home"></i></span> -->
-                            <input type="text" placeholder="Done" ng-model="todo.done" null-if-empty />
+                            <fieldset>
+                                <label for="doneCheck"><input id="doneCheck"type="checkbox" placeholder="Done" ng-model="todo.done" null-if-empty />
+                                Done</label>
+                            </fieldset>
                         </div>
                         <button class="btn" type="submit" ng-click="addTodo()">Add</button>
                     </fieldset>
