@@ -1,6 +1,6 @@
 package com.pacificspirit.todo_jersey.webapp.service;
 
-import com.pacificspirit.todo_jersey.webapp.resource.MessageResource;
+import com.pacificspirit.todo_jersey.webapp.service.MessageService;
 import com.twilio.sdk.resource.factory.MessageFactory;
 
 /**
