@@ -232,7 +232,7 @@ public class StorageServiceMongo extends StorageService{
      */
     public List<Todo> clear() {
         final Collection<Todo> values = get();
-        todos.remove(new BasicDBObject("_id", new ObjectId("")));
+        todos.remove(new BasicDBObject());
         return new ArrayList<Todo>(values);
     }
 

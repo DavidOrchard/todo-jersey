@@ -27,11 +27,9 @@ public abstract class StorageService implements StorageServiceIntf {
      * @param newDone
      */
     public static void compareDone(String oldDone, String newDone, String title) {
-    	System.out.println("compareDone, oldDone = " + oldDone + ", newDone = " + newDone);
     	if((oldDone == null || oldDone.equalsIgnoreCase("false")) && newDone.equalsIgnoreCase("true")) {
     		try {
-    			System.out.println("sending message");
-    			MessageResource.send("\"" + title + "\" task has been marked as done.", messageFactory);
+    			MessageService.send("\"" + title + "\" task has been marked as done.", messageFactory);
     		} catch(Exception e){
     			
     		}

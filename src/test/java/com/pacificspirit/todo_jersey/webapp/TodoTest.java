@@ -56,6 +56,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.client.ClientConfig;
 
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.service.SearchService;
 
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ServerProperties;
@@ -63,19 +64,17 @@ import org.glassfish.jersey.server.validation.ValidationError;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 import static org.mockito.Mockito.*;
 
 import com.twilio.sdk.TwilioRestClient; 
 import com.twilio.sdk.resource.factory.MessageFactory;
 
-
-//import com.sun.jersey.client.apache.ApacheHttpClient;
 
 /**
  * @author David Orchard (orchard at pacificspirit.com)
@@ -87,6 +86,7 @@ public class TodoTest extends JerseyTest {
 
     static {
         TODO_1 = new Todo();
+        TODO_1.setBody("hi");
         TODO_1.setTitle("Jersey Foo");
         TODO_1.setDone("true");
 
@@ -117,6 +117,8 @@ public class TodoTest extends JerseyTest {
         application.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
         return application;
     }
+    
+
 
     @Override
     protected void configureClient(final ClientConfig config) {
@@ -403,39 +405,52 @@ public class TodoTest extends JerseyTest {
 //        assertTrue(messageTemplates.contains("{search.string.empty}"));
 //    }
 //
-//    @Test
-//    public void testSearchByTitle() throws Exception {
-//        final WebTarget target = target().path("todo");
-//        target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(TODO_1, MediaType.APPLICATION_JSON_TYPE));
-//        target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(TODO_2, MediaType.APPLICATION_JSON_TYPE));
-//
-//        Response response = target.
-//                path("search/title").
-//                queryParam("q", "er").
-//                request(MediaType.APPLICATION_JSON_TYPE).
-//                get();
-//
-//        List<Todo> todos = response.readEntity(new GenericType<List<Todo>>() {});
-//
-//        assertEquals(200, response.getStatus());
-//        assertEquals(2, todos.size());
-//
-//        for (final Todo todo : todos) {
-//            assertTrue(todo.getTitle().contains("er"));
-//        }
-//
-//        response = target.
-//                path("search/title").
-//                queryParam("q", "Foo").
-//                request(MediaType.APPLICATION_JSON_TYPE).
-//                get();
-//
-//        todos = response.readEntity(new GenericType<List<Todo>>() {});
-//
-//        assertEquals(200, response.getStatus());
-//        assertEquals(1, todos.size());
-//        assertTrue(todos.get(0).getTitle().contains("Foo"));
-//
-//        assertEquals(200, target.request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
-//    }
+    @Test
+    public void testSearch() throws Exception {
+    	SearchService.init();
+//    	SearchService.clear();
+    	SearchService.index();
+        final WebTarget target = target().path("todo");
+        Response response = target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(TODO_1, MediaType.APPLICATION_JSON_TYPE));
+        assertEquals(200, response.getStatus());
+        response = target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(TODO_2, MediaType.APPLICATION_JSON_TYPE));
+        assertEquals(200, response.getStatus());
+        
+        int i = 0;
+        List<Todo> todos = null;
+        while( i++ < 5 ) {
+	        response = target.
+	                path("search").
+	                queryParam("q", "*er*").
+	                request(MediaType.APPLICATION_JSON_TYPE).
+	                get();
+	
+	        todos = response.readEntity(new GenericType<List<Todo>>() {});
+	        if(todos.size() == 2) {
+	        	break;
+	        }
+	        Thread.sleep(50);
+        }
+
+		assertEquals(200, response.getStatus());
+        assertEquals(2, todos.size());
+
+        for (final Todo todo : todos) {
+            assertTrue(todo.getTitle().contains("er"));
+        }
+
+        response = target.
+                path("search").
+                queryParam("q", "Foo").
+                request(MediaType.APPLICATION_JSON_TYPE).
+                get();
+
+        todos = response.readEntity(new GenericType<List<Todo>>() {});
+
+        assertEquals(200, response.getStatus());
+        assertEquals(1, todos.size());
+        assertTrue(todos.get(0).getTitle().contains("Foo"));
+
+        assertEquals(200, target.request(MediaType.APPLICATION_JSON_TYPE).delete().getStatus());
+    }
 }

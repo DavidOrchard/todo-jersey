@@ -15,7 +15,6 @@ public class NotFoundExceptionMapper implements ExceptionMapper<CustomNotFoundEx
 
     @Override
     public Response toResponse(CustomNotFoundException exception) {
-    	System.out.println("got CustomNFE");
         return Response.status(404).build();
     }
 

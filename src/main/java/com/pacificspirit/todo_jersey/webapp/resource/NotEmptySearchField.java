@@ -84,16 +84,17 @@ public @interface NotEmptySearchField {
 
         @Override
         public boolean isValid(final Todo todo, final ConstraintValidatorContext constraintValidatorContext) {
-            final String searchType = uriInfo.getPathParameters().getFirst("searchType");
+//            final String searchType = uriInfo.getPathParameters().getFirst("searchType");
             final String searchValue = uriInfo.getQueryParameters().getFirst("q");
 
-            if ("title".equals(searchType)) {
-                return todo.getTitle() != null && todo.getTitle().contains(searchValue);
-            } else if ("Done".equals(searchType)) {
-                return todo.getDone() != null && todo.getDone().contains(searchValue);
-            } else {
-                return todo.getBody().contains(searchValue);
-            }
+//            if ("title".equals(searchType)) {
+//                return todo.getTitle() != null && todo.getTitle().contains(searchValue);
+//            } else if ("Done".equals(searchType)) {
+//                return todo.getDone() != null && todo.getDone().contains(searchValue);
+//            } else {
+//                return todo.getBody().contains(searchValue);
+//            }
+            return searchValue != null;
         }
     }
 
@@ -112,6 +113,9 @@ public @interface NotEmptySearchField {
         @Override
         public boolean isValid(final List<Todo> todos, final ConstraintValidatorContext constraintValidatorContext) {
             boolean isValid = true;
+            if(todos == null) {
+            	return true;
+            }
             for (final Todo todo : todos) {
                 isValid &= validator.isValid(todo, constraintValidatorContext);
             }

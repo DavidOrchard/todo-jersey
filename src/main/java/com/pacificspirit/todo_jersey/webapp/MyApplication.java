@@ -51,6 +51,7 @@ import javax.validation.ParameterNameProvider;
 import javax.validation.Validation;
 
 import com.pacificspirit.todo_jersey.webapp.resource.TodoResource;
+import com.pacificspirit.todo_jersey.webapp.service.SearchService;
 import com.pacificspirit.todo_jersey.webapp.service.StorageServiceProvider;
 import com.twilio.sdk.resource.factory.MessageFactory;
 
@@ -83,6 +84,7 @@ public class MyApplication extends ResourceConfig {
         register(JsonConfiguration.class);
         
         StorageServiceProvider.init(messageFactory);
+        SearchService.init();
     }
 
     /**

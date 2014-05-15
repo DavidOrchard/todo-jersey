@@ -1,4 +1,4 @@
-package com.pacificspirit.todo_jersey.webapp.resource;
+package com.pacificspirit.todo_jersey.webapp.service;
 
 import java.util.*; 
 
@@ -10,7 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.NameValuePair;
 
 
-public class MessageResource {
+public class MessageService {
 	
 	 public static final String ACCOUNT_SID = "AC5cc193fbbc0c65efa75c563ce340d54c"; 
 	 public static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
@@ -31,7 +31,6 @@ public class MessageResource {
 		 params.add(new BasicNameValuePair("Body", msg));  
 		 
 		 Message message = messageFactory.create(params); 
-		 System.out.println(message.getSid());
 		 }
 		 catch(Exception e){
 			 System.out.println(e);

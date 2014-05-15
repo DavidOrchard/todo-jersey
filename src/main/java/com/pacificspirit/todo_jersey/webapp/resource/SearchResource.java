@@ -47,10 +47,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
 import javax.validation.constraints.NotNull;
 
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.service.SearchService;
 import com.pacificspirit.todo_jersey.webapp.service.StorageService;
 import com.pacificspirit.todo_jersey.webapp.resource.NotEmptySearchField;
 import com.pacificspirit.todo_jersey.webapp.resource.SearchType;
@@ -67,23 +67,11 @@ import org.hibernate.validator.constraints.NotBlank;
 @Produces(MediaType.APPLICATION_JSON)
 public class SearchResource {
 
-    @SearchType
-    @PathParam("searchType")
-    private String searchType;
-
     @GET
-    @NotNull
     @NotEmptySearchField
     public List<Todo> searchForTodo(
             @NotBlank(message = "{search.string.empty}") @QueryParam("q") final String searchValue) {
-
-//        if ("title".equals(searchType)) {
-//            return StorageService.findByTitle(searchValue);
-//        } else if ("done".equals(searchType)) {
-//            return StorageService.findByDone(searchValue);
-//        } else {
-//            return StorageService.findByBody(searchValue);
-//        }
-    	return null;
+    	
+    	return SearchService.search(searchValue);
     }
 }

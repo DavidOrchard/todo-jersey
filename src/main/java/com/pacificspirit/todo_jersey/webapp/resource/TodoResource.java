@@ -118,7 +118,9 @@ public class TodoResource {
     public Todo addTodo(
             @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
            final Todo todo) {
-        return s.addTodo(todo);
+        Todo added = s.addTodo(todo);
+        SearchService.add(added);
+        return added;
     }
     
     @POST
@@ -182,7 +184,9 @@ public class TodoResource {
     @DELETE
     @NotNull @HasId
     public List<Todo> deleteTodos() {
-        return s.clear();
+        List<Todo> todos = s.clear();
+        SearchService.clear();
+        return todos;
     }
 
     @DELETE
@@ -200,11 +204,12 @@ public class TodoResource {
 //        	errList.add(err);
         	throw new CustomNotFoundException(err);
         }
+        SearchService.remove(todo);
 
         return todo;
     }
 
-    @Path("search/{searchType}")
+    @Path("search")
     public SearchResource search() {
         return resourceContext.getResource(SearchResource.class);
     }
