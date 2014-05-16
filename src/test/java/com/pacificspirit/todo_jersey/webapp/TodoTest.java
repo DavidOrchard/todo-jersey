@@ -373,7 +373,7 @@ public class TodoTest extends JerseyTest {
         
         int i = 0;
         List<Todo> todos = null;
-        while( i++ < 5 ) {
+        while( i++ < 10 ) {
 	        response = target.
 	                path("search").
 	                queryParam("q", "*er*").
@@ -384,7 +384,7 @@ public class TodoTest extends JerseyTest {
 	        if(response.getStatus() == 200 && todos != null && todos.size() == 2) {
 	        	break;
 	        }
-	        Thread.sleep(50);
+	        Thread.sleep(100);
         }
 
 		assertEquals(200, response.getStatus());

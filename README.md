@@ -2,6 +2,8 @@
 
 This demonstrates a Todo web app and API built with [**Jersey**](https://jersey.java.net/), [**MongoDB**](http://mongodb.org), [**Elastic Search**](http://www.elasticsearch.org/), [**SearchBox.io**](http://www.searchbox.io/), [**AngularJS**](http://angularjs.org), and [**Bootstrap**](http://twitter.github.com/bootstrap)
 
+Available on [**Heroku**](http://todo-jersey-mongo-twilio.herokuapp.com/)
+
 # Requirements
 
 A Todo list app with a JSON REST API.
@@ -158,6 +160,8 @@ This churn is evident in the 0.1.0 library that commented out the check for stat
 
 ** TODO **
 
+- Mongo heroku addon
+- logging instead of system.out.
 - Deal with search service down or network errors (and test)
 - Move storage type check out of storage service to allow tests for in memory and mongo
 - clean up commented out code
