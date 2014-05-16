@@ -83,6 +83,13 @@ init parameter (`web.xml`) has to be enabled to let Jersey know that it should
 send validation errors as a Response entities (this behavior if disabled by
 default).
 
+## Configure
+
+The environment variables set for this app are:
+<pre>TWILIO_AUTH_TOKEN</pre>
+<pre>SEARCHLY_API_KEY</pre>
+<pre>TODO_JERSEY_STORAGE_TYPE</pre>, valid value is mongo and any other value means inMemory
+
 ## Running the App
 
 Run the app:
@@ -148,4 +155,11 @@ Reasonable as well.  There seems to be a lot of change in the api that isn't tra
 - the update index responses with "added":true, but the Index.getSucceeded() checks for status, always generating an NPE.
 
 This churn is evident in the 0.1.0 library that commented out the check for status and acknowledged and then the 0.1.1 added part of the check back in.
+
+** TODO **
+
+- Deal with search service down or network errors (and test)
+- Move messageInterpolator out of TodoResource
+- Move storage type check out of storage service to allow tests for in memory and mongo
+- clean up commented out code
 

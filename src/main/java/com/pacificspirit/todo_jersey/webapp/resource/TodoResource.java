@@ -87,7 +87,7 @@ public class TodoResource {
     @Context
     @NotNull
     private ResourceContext resourceContext;
-    private StorageService s  = StorageServiceProvider.get("mongo");
+    private StorageService s  = StorageServiceProvider.get( );
     private Configuration<?> configuration = Validation.byDefaultProvider().configure();
 	private MessageInterpolator m = configuration.getDefaultMessageInterpolator();
 	private MessageInterpolator.Context ctx = new MessageInterpolator.Context() {

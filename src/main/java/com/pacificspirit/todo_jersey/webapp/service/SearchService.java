@@ -26,8 +26,11 @@ public class SearchService {
 	private static final String indexName = "todos";
 	private static final String indexedType = "todo";
 	
-	public static void init() {
+	public static void init() throws Exception{
     
+		if(APIKey == null) {
+			throw new Exception("No Search APIKey defined");
+		}
 	 // Configuration
 	 ClientConfig clientConfig = new ClientConfig.Builder(connectionURL).multiThreaded(true).build();
 
@@ -79,11 +82,11 @@ public class SearchService {
             }
  
         } catch (IOException e) {
-        	System.out.println("SearchService.index");
+        	System.out.println("SearchService.index exception");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         } catch (Exception e) {
-        	System.out.println("SearchService.index");
+        	System.out.println("SearchService.index exception");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         }
@@ -91,44 +94,44 @@ public class SearchService {
 	}
 	
 	public static void add(Todo todo) {
-		if(client == null) {
-			init();
-		}
 		try {
-
+			if(client == null) {
+				init();
+			}
+			
 	        Index index = new Index.Builder(todo).index(indexName).type(indexedType).id(todo.getId()).build();
 	        JestResult result = client.execute(index);
 	
 	        System.out.println(result.getJsonString());
 
         } catch (IOException e) {
-        	System.out.println("SearchService.add");
+        	System.out.println("SearchService.add exception");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         } catch (Exception e) {
-        	System.out.println("SearchService.add");
+        	System.out.println("SearchService.add exception");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         }
 	}
 	
 	public static void remove(Todo todo) {
-		if(client == null) {
-			init();
-		}
 		try {
-			
+			if(client == null) {
+				init();
+			}
+				
 	        Delete delete = new Delete.Builder(indexName, indexedType, todo.getId()).build();
 	        JestResult result = client.execute(delete);
 	
 	        System.out.println(result.getJsonString());
 
         } catch (IOException e) {
-        	System.out.println("SearchService.remove");
+        	System.out.println("SearchService.remove exception");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         } catch (Exception e) {
-        	System.out.println("SearchService.remove");
+        	System.out.println("SearchService.remove exception");
         	System.out.println(e);
 //            logger.error("Indexing error", e);
         }
@@ -138,6 +141,7 @@ public class SearchService {
 	public static List<Todo> search(String term) {
 		try {
 	        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+	        // Bump title results by 2x over body
 			searchSourceBuilder.query(QueryBuilders.queryString(term).field("title", 2).field("body"));
 	
 			Search search = (Search) new Search.Builder(searchSourceBuilder.toString())
@@ -149,16 +153,16 @@ public class SearchService {
 			// elastic search + jest can throw NPE: https://github.com/spring-io/sagan/issues/274
 			JestResult result = client.execute(search);
 			if(!result.isSucceeded()) {
-				System.out.println("Search error, jsonString = " + result.getJsonString());
+				System.out.println("Search error, term = " + term + ", jsonString = " + result.getJsonString());
 			}
 			return result.getSourceAsObjectList(Todo.class);
         } catch (IOException e) {
-        	System.out.println("SearchService.search");
+        	System.out.println("SearchService.search, term = " + term);
         	System.err.print(e);
         	
 //            logger.error("Search error", e);
         } catch (Exception e) {
-        	System.out.println("SearchService.search");
+        	System.out.println("SearchService.search, term = " + term);
         	System.err.print(e);
 //            logger.error("Search error", e);
         }

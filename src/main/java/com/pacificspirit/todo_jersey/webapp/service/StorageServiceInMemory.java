@@ -59,6 +59,11 @@ public class StorageServiceInMemory extends StorageService{
     private final AtomicLong todoCounter = new AtomicLong(0);
     private final Map<String, Todo> todos = new HashMap<String, Todo>();
     
+    public StorageServiceInMemory() {
+    	IDRegexp = "^[0-9]*$";
+
+    }
+    
     /**
      * Adds a todo into the storage. If a todo with given data already exist {@code null} value is returned.
      *
@@ -67,10 +72,12 @@ public class StorageServiceInMemory extends StorageService{
      */
     public Todo addTodo(final Todo todo) {
     	 
-        if (todos.containsValue(todo)) {
+    	
+        if (todo.getId() != null && todos.containsKey(todo.getId())) {
             return null;
         }
-        todo.setId(String.valueOf(todoCounter.incrementAndGet()));
+        String id = String.valueOf(todoCounter.incrementAndGet());
+        todo.setId(id);
         todos.put(todo.getId(), todo);
         return todo;
     }

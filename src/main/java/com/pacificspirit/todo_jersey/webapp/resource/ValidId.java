@@ -12,6 +12,7 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
 import com.pacificspirit.todo_jersey.webapp.domain.Todo;
+import com.pacificspirit.todo_jersey.webapp.service.StorageServiceProvider;
 
 /**
  * Checks whether a given {@link org.Todo.jersey.examples.beanvalidation.webapp.domain.Todo} string is a valid ID.
@@ -36,7 +37,7 @@ public @interface ValidId {
 
         @Override
         public boolean isValid(final String id, final ConstraintValidatorContext constraintValidatorContext) {
-            return id.matches("^[0-9a-fA-F]{24}$");
+        	return id.matches(StorageServiceProvider.getIDRegexp());
         }
     }
 

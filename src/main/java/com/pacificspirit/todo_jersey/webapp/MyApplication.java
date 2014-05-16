@@ -68,11 +68,11 @@ import org.glassfish.jersey.server.validation.internal.InjectingConstraintValida
  */
 public class MyApplication extends ResourceConfig {
 	
-	public MyApplication() {
+	public MyApplication() throws Exception{
 		this(null);
 	}
 
-    public MyApplication(MessageFactory messageFactory) {
+    public MyApplication(MessageFactory messageFactory) throws Exception{
         // Resources.
         packages(TodoResource.class.getPackage().getName());
 

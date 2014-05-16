@@ -38,6 +38,8 @@ public class StorageServiceMongo extends StorageService{
     	} catch (Exception e) {
     		
     	}
+    	
+    	IDRegexp = "^[0-9a-fA-F]{24}$";
      	
     }
 

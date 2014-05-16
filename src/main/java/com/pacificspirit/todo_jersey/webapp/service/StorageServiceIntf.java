@@ -69,5 +69,11 @@ public interface StorageServiceIntf {
      * @return todos or {@code null} if the todo is not present in the storage.
      */
     public List<Todo> get();
+    
+    /*
+     * Regular expression for IDs
+     */
+    
+    public String getIDRegexp();
 
 }

@@ -9,7 +9,7 @@ import com.pacificspirit.todo_jersey.webapp.service.MessageService;
  */
 public abstract class StorageService implements StorageServiceIntf {
 
-    
+    protected String IDRegexp = "";
     /** 
      * compares done fields and calls MessageService if value has gone from false to true
      * @param oldDone
@@ -23,6 +23,10 @@ public abstract class StorageService implements StorageServiceIntf {
     			
     		}
     	}
+    }
+    
+    public String getIDRegexp() {
+    	return IDRegexp;
     }
      
 }

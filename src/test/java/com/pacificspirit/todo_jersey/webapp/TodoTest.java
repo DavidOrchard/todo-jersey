@@ -97,7 +97,7 @@ public class TodoTest extends JerseyTest {
     }
 
     @Override
-    protected Application configure() {
+    protected Application configure(){
         enable(TestProperties.LOG_TRAFFIC);
         enable(TestProperties.DUMP_ENTITY);
         final String ACCOUNT_SID = "AC5cc193fbbc0c65efa75c563ce340d54c"; 
@@ -112,9 +112,14 @@ public class TodoTest extends JerseyTest {
     		System.out.println(e);
     	}
 
-        final MyApplication application = new MyApplication(messageFactory);
-        application.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
-        return application;
+    	try {
+    		final MyApplication application = new MyApplication(messageFactory);
+
+    		application.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+    		return application;
+    	} catch (Exception e) {
+    		return null;
+    	}
     }
     
 
@@ -354,54 +359,7 @@ public class TodoTest extends JerseyTest {
         assertTrue(messageTemplates.contains("{todo.empty.means}"));
         assertEquals(2, messageTemplates.size());
     }
-//
-//    @Test
-//    public void testSearchByUnknown() throws Exception {
-//        final Response response = target().
-//                path("todo").
-//                path("search/unknown").
-//                queryParam("q", "er").
-//                request(MediaType.APPLICATION_JSON_TYPE).
-//                get();
-//
-//        assertEquals(400, response.getStatus());
-//
-//        final Set<String> messageTemplates = getValidationMessageTemplates(response);
-//        assertEquals(1, messageTemplates.size());
-//        assertTrue(messageTemplates.contains("{com.pacificspirit.todo_jersey.webapp.constraint.SearchType.message}"));
-//    }
-//
-//    @Test
-//    public void testSearchByTitleEmpty() throws Exception {
-//        final Response response = target().
-//                path("todo").
-//                path("search/title").
-//                queryParam("q", "er").
-//                request(MediaType.APPLICATION_JSON_TYPE).
-//                get();
-//
-//        assertEquals(200, response.getStatus());
-//
-//        final List<Todo> result = response.readEntity(new GenericType<List<Todo>>() {});
-//        assertEquals(0, result.size());
-//    }
-//
-//    @Test
-//    public void testSearchByBodyInvalid() throws Exception {
-//        final Response response = target().
-//                path("todo").
-//                path("search/body").
-//                queryParam("q", (String) null).
-//                request(MediaType.APPLICATION_JSON_TYPE).
-//                get();
-//
-//        assertEquals(400, response.getStatus());
-//
-//        final Set<String> messageTemplates = getValidationMessageTemplates(response);
-//        assertEquals(1, messageTemplates.size());
-//        assertTrue(messageTemplates.contains("{search.string.empty}"));
-//    }
-//
+
     @Test
     public void testSearch() throws Exception {
     	SearchService.init();
@@ -423,7 +381,7 @@ public class TodoTest extends JerseyTest {
 	                get();
 	
 	        todos = response.readEntity(new GenericType<List<Todo>>() {});
-	        if(todos.size() == 2) {
+	        if(response.getStatus() == 200 && todos != null && todos.size() == 2) {
 	        	break;
 	        }
 	        Thread.sleep(50);
