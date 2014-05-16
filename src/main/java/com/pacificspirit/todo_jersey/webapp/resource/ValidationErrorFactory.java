@@ -76,106 +76,37 @@ import com.pacificspirit.todo_jersey.webapp.resource.AtLeastOneTodo;
  */
 @Path("todo")
 @Produces("application/json")
-public class TodoResource {
+public class ValidationErrorFactory {
 
-    @Context
-    @NotNull
-    private ResourceContext resourceContext;
-    private StorageService s  = StorageServiceProvider.get( );
-    private ValidationErrorFactory validationErrorFactory = new ValidationErrorFactory();
-    
-    @POST
-    @Consumes("application/json")
-    @NotNull(message = "{todo.already.exist}")
-//    @HasId
-    public Todo addTodo(
-            @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
-           final Todo todo) {
-        Todo added = s.addTodo(todo);
-        SearchService.add(added);
-        return added;
+    private Configuration<?> configuration = Validation.byDefaultProvider().configure();
+	private MessageInterpolator m = configuration.getDefaultMessageInterpolator();
+	private MessageInterpolator.Context ctx = new MessageInterpolator.Context() {
+
+		@Override
+		public ConstraintDescriptor<?> getConstraintDescriptor() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Object getValidatedValue() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <T> T unwrap(Class<T> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}};
+
+		
+	public ValidationError create(String message) {
+		ValidationError error = new ValidationError();
+    	
+        error.setMessage(m.interpolate("{todo.does.not.exist}", ctx));
+        error.setMessageTemplate("{todo.does.not.exist}");
+       
+        return error;
     }
-    
-    @POST
-    @Path("{id}/done")
-    @Consumes("application/json")
-//    @NotNull(message = "{todo.already.exist}")
-    @HasId
-    public Todo updateDone(
-            @PathParam("id") final String id,
-           final Boolean done) {
-        return s.updateTodoDone(id, done);
-    }
-
-
-    @GET
-    @NotNull
-    public List<Todo> getTodos() {
-        return s.get();
-    }
-
-    @GET
-    @Path("{id}")
-//    @HasId
-    public Todo getTodo(
-            @PathParam("id") @ValidId(message = "{invalid.id}") final String id) {
-        Todo todo = s.get(id);
-        if(todo == null) {        	
-        	// TODO: return list.  very annoying, I can't figure out how to get a List<ValidationError> to serialize
-//        	List<ValidationError> errList = new ArrayList<ValidationError>();
-//        	errList.add(err);
-        	throw new CustomNotFoundException(validationErrorFactory.create("{todo.does.not.exist}"));
-        }
-        
-        return todo;
-    }
-
-
-
-    @PUT
-    @Path("{id}")
-    @Consumes("application/json")
-     public Todo updateTodo(
-            @NotNull @AtLeastOneTodo(message = "{todo.empty.means}") @Valid
-           final Todo todo) {
-        return s.updateTodoFull(todo);
-    }
-    
-    @PATCH
-    @Path("{id}")
-    @Consumes("application/json")
-     public Todo updateTodoPartial(
-            @NotNull @AtLeastOneTodo(message = "{todo.empty.means}")
-           final Todo todo) {
-        return s.updateTodoPartial(todo);
-    }
-    
-    @DELETE
-    public List<Todo> deleteTodos() {
-        List<Todo> todos = s.clear();
-        SearchService.clear();
-        return todos;
-    }
-
-    @DELETE
-    @Path("{id}")
-//    @HasId
-    public Todo deleteTodo(
-            @PathParam("id") @ValidId(message = "{invalid.id}") final String id) {
-    	Todo todo = s.remove(id);
-        if(todo == null) {        	
-        	throw new CustomNotFoundException(validationErrorFactory.create("{todo.does.not.exist}"));
-        }
-        SearchService.remove(todo);
-
-        return todo;
-    }
-
-    @Path("search")
-    public SearchResource search() {
-        return resourceContext.getResource(SearchResource.class);
-    }
-    
-    // TODO: support PATCH rfc with accept-patchheader per
-    // http://java.dzone.com/articles/transparent-patch-support-jax
 }

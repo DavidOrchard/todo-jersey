@@ -13,6 +13,11 @@ import org.glassfish.jersey.server.validation.ValidationError;
  */
 public class CustomNotFoundException extends WebApplicationException {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 497946530320314197L;
+
+	/**
 	  * Create a HTTP 404 (Not Found) exception.
 	  */
 	  public CustomNotFoundException() {

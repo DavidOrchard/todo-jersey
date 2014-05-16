@@ -159,7 +159,7 @@ This churn is evident in the 0.1.0 library that commented out the check for stat
 ** TODO **
 
 - Deal with search service down or network errors (and test)
-- Move messageInterpolator out of TodoResource
 - Move storage type check out of storage service to allow tests for in memory and mongo
 - clean up commented out code
+- PATCH support
 
